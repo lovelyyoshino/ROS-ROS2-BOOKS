@@ -10,3 +10,6 @@
 [submodule "第五章/避障/cpp_simulation"]
 	path = 第五章/避障/cpp_simulation
 	url = https://github.com/Mafumaful/cpp_simulation.git
+[submodule "第二章/ros2_ws"]
+	path = 第二章/ros2_ws
+	url = https://github.com/Mafumaful/ros2_ws.git
