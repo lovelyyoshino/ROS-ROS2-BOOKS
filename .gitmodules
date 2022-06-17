@@ -7,7 +7,6 @@
 [submodule "第三章/VINS-FUSION-leanrning"]
 	path = 第三章/VINS-FUSION-leanrning
 	url = https://github.com/kuankuan-yue/VINS-FUSION-leanrning.git
-
 [submodule "第五章/避障/cpp_simulation"]
 	path = 第五章/避障/cpp_simulation
 	url = https://github.com/Mafumaful/cpp_simulation.git
