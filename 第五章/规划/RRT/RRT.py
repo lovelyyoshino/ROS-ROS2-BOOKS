@@ -110,7 +110,7 @@ class RRT:
             new_node.y += self.path_resolution * math.sin(theta)
             new_node.path_x.append(new_node.x)
             new_node.path_y.append(new_node.y)
-            
+
         d, _ = self.calc_distance_and_angle(new_node, to_node)#计算出new_node节点和to_node目标节点的距离
         if d <= self.path_resolution:#如果小于分辨率,则认为找到
             new_node.path_x.append(to_node.x)
@@ -224,9 +224,9 @@ def main(gx=6.0, gy=10.0):
         goal=[gx, gy],#目标点
         rand_area=[-2, 15],# 从-2到15取运动位置
         obstacle_list=obstacleList)
-    path = rrt.planning(animation=show_animation)
+    path = rrt.planning(animation=show_animation)#使用RRT搜索路径
 
-    if path is None:
+    if path is None:#如果找不到最终返回的路径
         print("Cannot find path")
     else:
         print("found path!!")
