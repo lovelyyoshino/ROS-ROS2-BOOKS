@@ -13,3 +13,6 @@
 [submodule "第二章/ros2_ws"]
 	path = 第二章/ros2_ws
 	url = https://github.com/Mafumaful/ros2_ws.git
+[submodule "第五章/规划/path_planning"]
+	path = 第五章/规划/path_planning
+	url = https://github.com/vss2sn/path_planning.git
