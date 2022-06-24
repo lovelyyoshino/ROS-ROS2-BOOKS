@@ -16,3 +16,6 @@
 [submodule "第五章/规划/path_planning"]
 	path = 第五章/规划/path_planning
 	url = https://github.com/vss2sn/path_planning.git
+[submodule "第三章/FAST_LIO2_Noted"]
+	path = 第三章/FAST_LIO2_Noted
+	url = https://github.com/lovelyyoshino/FAST_LIO2_Noted.git
