@@ -1,6 +1,0 @@
-<launch>
-<node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0.1 0 0 0 1 base_footprint camera 10" />
-<rosparam file="$(find apriltag_detector)/config/Available_Tag.yaml" command="load" />
-<node pkg="apriltag_detector" type ="tag_detector" name="tag_detector" output="screen"/>
-
-</launch>

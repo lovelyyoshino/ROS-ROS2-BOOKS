@@ -1,0 +1,3945 @@
+<sdf version='1.6'>
+  <world name='default'>
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose frame=''>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+    <physics name='default_physics' default='0' type='ode'>
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>10</iters>
+          <sor>1.3</sor>
+          <use_dynamic_moi_rescaling>0</use_dynamic_moi_rescaling>
+        </solver>
+        <constraints>
+          <cfm>0</cfm>
+          <erp>0.2</erp>
+          <contact_max_correcting_vel>100</contact_max_correcting_vel>
+          <contact_surface_layer>0.001</contact_surface_layer>
+        </constraints>
+      </ode>
+      <max_step_size>0.002</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>500</real_time_update_rate>
+    </physics>
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>1</shadows>
+    </scene>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <plugin name='map' filename='libStaticMapPlugin.so'>
+      <center>32.2660215 -111.2735455</center>
+      <world_size>500</world_size>
+      <pose>76.900558 12.304379 0 0 0 -1.331975</pose>
+      <map_type>satellite</map_type>
+      <api_key>YOUR GOOGLE API KEY</api_key>
+      <use_cache>true</use_cache>
+    </plugin>
+    <model name='f450-3'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://f450-3/meshes/f450.dae</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://f450-3/meshes/f450.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>__default__</uri>
+              <name>__default__</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <gravity>1</gravity>
+      </link>
+      <pose frame=''>50 1.56071 0 0 -0 0</pose>
+    </model>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <model name='f450'>
+      <link name='base_link'>
+        <pose frame=''>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>2</mass>
+          <inertia>
+            <ixx>0.0337</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0337</iyy>
+            <iyz>0</iyz>
+            <izz>0.0185</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <velocity_decay/>
+        <gravity>1</gravity>
+        <visual name='base_link_inertia_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://f450/meshes/f450.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/White</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0 0 0 1</specular>
+            <emissive>0 0 0 1</emissive>
+            <shader type='vertex'>
+              <normal_map>__default__</normal_map>
+            </shader>
+          </material>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+        </visual>
+        <collision name='base_link_inertia_collision'>
+          <laser_retro>0</laser_retro>
+          <max_contacts>10</max_contacts>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://f450/meshes/f450.dae</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+                <fdir1>0 0 0</fdir1>
+                <slip1>0</slip1>
+                <slip2>0</slip2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce>
+              <restitution_coefficient>0</restitution_coefficient>
+              <threshold>1e+06</threshold>
+            </bounce>
+            <contact>
+              <collide_without_contact>0</collide_without_contact>
+              <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+              <collide_bitmask>1</collide_bitmask>
+              <ode>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+                <max_vel>0.01</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+              <bullet>
+                <split_impulse>1</split_impulse>
+                <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+              </bullet>
+            </contact>
+          </surface>
+        </collision>
+      </link>
+      <link name='/imu_link'>
+        <pose frame=''>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>0.015</mass>
+          <inertia>
+            <ixx>1e-05</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1e-05</iyy>
+            <iyz>0</iyz>
+            <izz>1e-05</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='f450/robot_camera'>
+        <pose frame=''>0.12 -0 0.06 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>0.015</mass>
+          <inertia>
+            <ixx>1e-06</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1e-06</iyy>
+            <iyz>0</iyz>
+            <izz>1e-06</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <sensor name='camera' type='depth'>
+          <always_on>1</always_on>
+          <update_rate>20</update_rate>
+          <camera name='__default__'>
+            <horizontal_fov>1.0472</horizontal_fov>
+            <image>
+              <width>640</width>
+              <height>480</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>100</far>
+            </clip>
+          </camera>
+          <plugin name='camera_plugin' filename='libgazebo_ros_openni_kinect.so'>
+            <baseline>0.2</baseline>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>0.0</updateRate>
+            <cameraName>camera_ir</cameraName>
+            <imageTopicName>/camera/depth/image_raw_front</imageTopicName>
+            <cameraInfoTopicName>/camera/depth/camera_info</cameraInfoTopicName>
+            <depthImageTopicName>/camera/depth/image_raw_front</depthImageTopicName>
+            <depthImageInfoTopicName>/camera/depth/camera_info_front</depthImageInfoTopicName>
+            <pointCloudTopicName>/camera/depth/points_front</pointCloudTopicName>
+            <frameName>camera_link_front</frameName>
+            <pointCloudCutoff>0.05</pointCloudCutoff>
+            <distortionK1>0</distortionK1>
+            <distortionK2>0</distortionK2>
+            <distortionK3>0</distortionK3>
+            <distortionT1>0</distortionT1>
+            <distortionT2>0</distortionT2>
+            <CxPrime>0</CxPrime>
+            <Cx>0</Cx>
+            <Cy>0</Cy>
+            <focalLength>0</focalLength>
+            <hackBaseline>0</hackBaseline>
+            <robotNamespace>/</robotNamespace>
+          </plugin>
+        </sensor>
+        <visual name='visual'>
+          <geometry>
+            <box>
+              <size>0.001 0.001 0.001</size>
+            </box>
+          </geometry>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+          <material>
+            <shader type='pixel'/>
+          </material>
+        </visual>
+      </link>
+      <link name='f450/robot_camera_down'>
+        <pose frame=''>-0.12 -0 0.01 -9.4e-05 1.57079 -9.4e-05</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>0.015</mass>
+          <inertia>
+            <ixx>1e-06</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1e-06</iyy>
+            <iyz>0</iyz>
+            <izz>1e-06</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <sensor name='camera' type='depth'>
+          <always_on>1</always_on>
+          <update_rate>20</update_rate>
+          <camera name='__default__'>
+            <horizontal_fov>1.0472</horizontal_fov>
+            <image>
+              <width>640</width>
+              <height>480</height>
+              <format>R8G8B8</format>
+            </image>
+            <clip>
+              <near>0.1</near>
+              <far>100</far>
+            </clip>
+          </camera>
+          <plugin name='camera_plugin' filename='libgazebo_ros_openni_kinect.so'>
+            <baseline>0.2</baseline>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>0.0</updateRate>
+            <cameraName>camera_ir</cameraName>
+            <imageTopicName>/camera/depth/image_raw</imageTopicName>
+            <cameraInfoTopicName>/camera/depth/camera_info</cameraInfoTopicName>
+            <depthImageTopicName>/camera/depth/image_raw</depthImageTopicName>
+            <depthImageInfoTopicName>/camera/depth/camera_info</depthImageInfoTopicName>
+            <pointCloudTopicName>/camera/depth/points</pointCloudTopicName>
+            <frameName>camera_link</frameName>
+            <pointCloudCutoff>0.05</pointCloudCutoff>
+            <distortionK1>0</distortionK1>
+            <distortionK2>0</distortionK2>
+            <distortionK3>0</distortionK3>
+            <distortionT1>0</distortionT1>
+            <distortionT2>0</distortionT2>
+            <CxPrime>0</CxPrime>
+            <Cx>0</Cx>
+            <Cy>0</Cy>
+            <focalLength>0</focalLength>
+            <hackBaseline>0</hackBaseline>
+            <robotNamespace>/</robotNamespace>
+          </plugin>
+        </sensor>
+        <visual name='visual'>
+          <geometry>
+            <box>
+              <size>0.001 0.001 0.001</size>
+            </box>
+          </geometry>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+          <material>
+            <shader type='pixel'/>
+          </material>
+        </visual>
+      </link>
+      <link name='f450/robot_sonar_down'>
+        <pose frame=''>-0.15 0 0.01 -9.4e-05 1.57079 -9.4e-05</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>0.015</mass>
+          <inertia>
+            <ixx>1e-06</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1e-06</iyy>
+            <iyz>0</iyz>
+            <izz>1e-06</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <sensor name='sonar' type='ray'>
+          <always_on>1</always_on>
+          <update_rate>100</update_rate>
+          <ray>
+            <range>
+              <min>0.2</min>
+              <max>40</max>
+              <resolution>0.01</resolution>
+            </range>
+            <scan>
+              <horizontal>
+                <samples>100</samples>
+                <min_angle>-3</min_angle>
+                <max_angle>3</max_angle>
+                <resolution>1</resolution>
+              </horizontal>
+              <vertical>
+                <samples>1</samples>
+                <min_angle>0</min_angle>
+                <max_angle>0</max_angle>
+              </vertical>
+            </scan>
+          </ray>
+          <plugin name='gazebo_ros_sonar_controller' filename='libhector_gazebo_ros_sonar.so'>
+            <gaussianNoise>0.02</gaussianNoise>
+            <topicName>sonar</topicName>
+            <frameId>sonar_link</frameId>
+            <robotNamespace>/</robotNamespace>
+          </plugin>
+        </sensor>
+        <visual name='visual'>
+          <geometry>
+            <box>
+              <size>0.001 0.001 0.001</size>
+            </box>
+          </geometry>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+          <material>
+            <shader type='pixel'/>
+          </material>
+        </visual>
+      </link>
+      <link name='rotor_0'>
+        <pose frame=''>0.159 -0.159 0.11 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>0.005</mass>
+          <inertia>
+            <ixx>9.75e-07</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.000273104</iyy>
+            <iyz>0</iyz>
+            <izz>0.000274004</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <velocity_decay/>
+        <visual name='rotor_0_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://rotors_description/meshes/iris_prop_ccw.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Green</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+            <ambient>0 1 0 1</ambient>
+            <diffuse>0 1 0 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 1</emissive>
+            <shader type='pixel'/>
+          </material>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+        </visual>
+        <collision name='rotor_0_collision'>
+          <laser_retro>0</laser_retro>
+          <max_contacts>10</max_contacts>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.128</radius>
+              <length>0.005</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+                <fdir1>0 0 0</fdir1>
+                <slip1>0</slip1>
+                <slip2>0</slip2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce>
+              <restitution_coefficient>0</restitution_coefficient>
+              <threshold>1e+06</threshold>
+            </bounce>
+            <contact>
+              <collide_without_contact>0</collide_without_contact>
+              <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+              <collide_bitmask>1</collide_bitmask>
+              <ode>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+                <max_vel>0.01</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+              <bullet>
+                <split_impulse>1</split_impulse>
+                <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+              </bullet>
+            </contact>
+          </surface>
+        </collision>
+      </link>
+      <link name='rotor_1'>
+        <pose frame=''>-0.159 0.159 0.11 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>0.005</mass>
+          <inertia>
+            <ixx>9.75e-07</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.000273104</iyy>
+            <iyz>0</iyz>
+            <izz>0.000274004</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <velocity_decay/>
+        <visual name='rotor_1_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://rotors_description/meshes/iris_prop_ccw.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Red</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 1</emissive>
+            <shader type='pixel'/>
+          </material>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+        </visual>
+        <collision name='rotor_1_collision'>
+          <laser_retro>0</laser_retro>
+          <max_contacts>10</max_contacts>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.128</radius>
+              <length>0.005</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+                <fdir1>0 0 0</fdir1>
+                <slip1>0</slip1>
+                <slip2>0</slip2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce>
+              <restitution_coefficient>0</restitution_coefficient>
+              <threshold>1e+06</threshold>
+            </bounce>
+            <contact>
+              <collide_without_contact>0</collide_without_contact>
+              <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+              <collide_bitmask>1</collide_bitmask>
+              <ode>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+                <max_vel>0.01</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+              <bullet>
+                <split_impulse>1</split_impulse>
+                <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+              </bullet>
+            </contact>
+          </surface>
+        </collision>
+      </link>
+      <link name='rotor_2'>
+        <pose frame=''>0.159 0.159 0.11 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>0.005</mass>
+          <inertia>
+            <ixx>9.75e-07</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.000273104</iyy>
+            <iyz>0</iyz>
+            <izz>0.000274004</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <velocity_decay/>
+        <visual name='rotor_2_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://rotors_description/meshes/iris_prop_cw.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Green</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+            <ambient>0 1 0 1</ambient>
+            <diffuse>0 1 0 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 1</emissive>
+            <shader type='pixel'/>
+          </material>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+        </visual>
+        <collision name='rotor_2_collision'>
+          <laser_retro>0</laser_retro>
+          <max_contacts>10</max_contacts>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.128</radius>
+              <length>0.005</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+                <fdir1>0 0 0</fdir1>
+                <slip1>0</slip1>
+                <slip2>0</slip2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce>
+              <restitution_coefficient>0</restitution_coefficient>
+              <threshold>1e+06</threshold>
+            </bounce>
+            <contact>
+              <collide_without_contact>0</collide_without_contact>
+              <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+              <collide_bitmask>1</collide_bitmask>
+              <ode>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+                <max_vel>0.01</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+              <bullet>
+                <split_impulse>1</split_impulse>
+                <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+              </bullet>
+            </contact>
+          </surface>
+        </collision>
+      </link>
+      <link name='rotor_3'>
+        <pose frame=''>-0.159 -0.159 0.11 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>0.005</mass>
+          <inertia>
+            <ixx>9.75e-07</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.000273104</iyy>
+            <iyz>0</iyz>
+            <izz>0.000274004</izz>
+          </inertia>
+        </inertial>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <velocity_decay/>
+        <visual name='rotor_3_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>model://rotors_description/meshes/iris_prop_cw.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Red</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+            <ambient>1 0 0 1</ambient>
+            <diffuse>1 0 0 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <emissive>0 0 0 1</emissive>
+            <shader type='pixel'/>
+          </material>
+          <cast_shadows>1</cast_shadows>
+          <transparency>0</transparency>
+        </visual>
+        <collision name='rotor_3_collision'>
+          <laser_retro>0</laser_retro>
+          <max_contacts>10</max_contacts>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <cylinder>
+              <radius>0.128</radius>
+              <length>0.005</length>
+            </cylinder>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+                <fdir1>0 0 0</fdir1>
+                <slip1>0</slip1>
+                <slip2>0</slip2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce>
+              <restitution_coefficient>0</restitution_coefficient>
+              <threshold>1e+06</threshold>
+            </bounce>
+            <contact>
+              <collide_without_contact>0</collide_without_contact>
+              <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+              <collide_bitmask>1</collide_bitmask>
+              <ode>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+                <max_vel>0.01</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+              <bullet>
+                <split_impulse>1</split_impulse>
+                <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+              </bullet>
+            </contact>
+          </surface>
+        </collision>
+      </link>
+      <joint name='/imu_joint' type='revolute'>
+        <parent>base_link</parent>
+        <child>/imu_link</child>
+        <axis>
+          <xyz>1 0 0</xyz>
+          <use_parent_model_frame>1</use_parent_model_frame>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+            <effort>0</effort>
+            <velocity>0</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+            <damping>0</damping>
+            <friction>0</friction>
+          </dynamics>
+        </axis>
+        <physics>
+          <ode>
+            <limit>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </limit>
+            <suspension>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </suspension>
+          </ode>
+        </physics>
+      </joint>
+      <joint name='f450/down_cam_joint' type='revolute'>
+        <parent>base_link</parent>
+        <child>f450/robot_camera_down</child>
+        <axis>
+          <xyz>1 0 0</xyz>
+          <use_parent_model_frame>1</use_parent_model_frame>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+            <effort>0</effort>
+            <velocity>0</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+            <damping>0</damping>
+            <friction>0</friction>
+          </dynamics>
+        </axis>
+        <physics>
+          <ode>
+            <limit>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </limit>
+            <suspension>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </suspension>
+          </ode>
+        </physics>
+      </joint>
+      <joint name='f450/down_sonar_joint' type='revolute'>
+        <parent>base_link</parent>
+        <child>f450/robot_sonar_down</child>
+        <axis>
+          <xyz>1 0 0</xyz>
+          <use_parent_model_frame>1</use_parent_model_frame>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+            <effort>0</effort>
+            <velocity>0</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+            <damping>0</damping>
+            <friction>0</friction>
+          </dynamics>
+        </axis>
+        <physics>
+          <ode>
+            <limit>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </limit>
+            <suspension>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </suspension>
+          </ode>
+        </physics>
+      </joint>
+      <joint name='f450/front_cam_joint' type='revolute'>
+        <parent>base_link</parent>
+        <child>f450/robot_camera</child>
+        <axis>
+          <xyz>1 0 0</xyz>
+          <use_parent_model_frame>1</use_parent_model_frame>
+          <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+            <effort>0</effort>
+            <velocity>0</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+            <damping>0</damping>
+            <friction>0</friction>
+          </dynamics>
+        </axis>
+        <physics>
+          <ode>
+            <limit>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </limit>
+            <suspension>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </suspension>
+          </ode>
+        </physics>
+      </joint>
+      <joint name='rotor_0_joint' type='revolute'>
+        <parent>base_link</parent>
+        <child>rotor_0</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <use_parent_model_frame>1</use_parent_model_frame>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+            <effort>-1</effort>
+            <velocity>-1</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+            <damping>0</damping>
+            <friction>0</friction>
+          </dynamics>
+        </axis>
+        <physics>
+          <ode>
+            <limit>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </limit>
+            <suspension>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </suspension>
+          </ode>
+        </physics>
+      </joint>
+      <joint name='rotor_1_joint' type='revolute'>
+        <parent>base_link</parent>
+        <child>rotor_1</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <use_parent_model_frame>1</use_parent_model_frame>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+            <effort>-1</effort>
+            <velocity>-1</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+            <damping>0</damping>
+            <friction>0</friction>
+          </dynamics>
+        </axis>
+        <physics>
+          <ode>
+            <limit>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </limit>
+            <suspension>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </suspension>
+          </ode>
+        </physics>
+      </joint>
+      <joint name='rotor_2_joint' type='revolute'>
+        <parent>base_link</parent>
+        <child>rotor_2</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <use_parent_model_frame>1</use_parent_model_frame>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+            <effort>-1</effort>
+            <velocity>-1</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+            <damping>0</damping>
+            <friction>0</friction>
+          </dynamics>
+        </axis>
+        <physics>
+          <ode>
+            <limit>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </limit>
+            <suspension>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </suspension>
+          </ode>
+        </physics>
+      </joint>
+      <joint name='rotor_3_joint' type='revolute'>
+        <parent>base_link</parent>
+        <child>rotor_3</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <use_parent_model_frame>1</use_parent_model_frame>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+            <effort>-1</effort>
+            <velocity>-1</velocity>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+            <damping>0</damping>
+            <friction>0</friction>
+          </dynamics>
+        </axis>
+        <physics>
+          <ode>
+            <limit>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </limit>
+            <suspension>
+              <cfm>0</cfm>
+              <erp>0.2</erp>
+            </suspension>
+          </ode>
+        </physics>
+      </joint>
+      <static>0</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <plugin name='rosbag' filename='librotors_gazebo_multirotor_base_plugin.so'>
+        <robotNamespace/>
+        <linkName>base_link</linkName>
+        <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
+      </plugin>
+      <plugin name='front_right_motor_model' filename='librotors_gazebo_motor_model.so'>
+        <robotNamespace/>
+        <jointName>rotor_0_joint</jointName>
+        <linkName>rotor_0</linkName>
+        <turningDirection>ccw</turningDirection>
+        <timeConstantUp>0.0125</timeConstantUp>
+        <timeConstantDown>0.025</timeConstantDown>
+        <maxRotVelocity>1100</maxRotVelocity>
+        <motorConstant>8.54858e-06</motorConstant>
+        <momentConstant>0.06</momentConstant>
+        <commandSubTopic>/gazebo/command/motor_speed</commandSubTopic>
+        <motorNumber>0</motorNumber>
+        <rotorDragCoefficient>0.000806428</rotorDragCoefficient>
+        <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+        <motorSpeedPubTopic>/motor_speed/0</motorSpeedPubTopic>
+        <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
+      </plugin>
+      <plugin name='back_left_motor_model' filename='librotors_gazebo_motor_model.so'>
+        <robotNamespace/>
+        <jointName>rotor_1_joint</jointName>
+        <linkName>rotor_1</linkName>
+        <turningDirection>ccw</turningDirection>
+        <timeConstantUp>0.0125</timeConstantUp>
+        <timeConstantDown>0.025</timeConstantDown>
+        <maxRotVelocity>1100</maxRotVelocity>
+        <motorConstant>8.54858e-06</motorConstant>
+        <momentConstant>0.06</momentConstant>
+        <commandSubTopic>/gazebo/command/motor_speed</commandSubTopic>
+        <motorNumber>1</motorNumber>
+        <rotorDragCoefficient>0.000806428</rotorDragCoefficient>
+        <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+        <motorSpeedPubTopic>/motor_speed/1</motorSpeedPubTopic>
+        <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
+      </plugin>
+      <plugin name='front_left_motor_model' filename='librotors_gazebo_motor_model.so'>
+        <robotNamespace/>
+        <jointName>rotor_2_joint</jointName>
+        <linkName>rotor_2</linkName>
+        <turningDirection>cw</turningDirection>
+        <timeConstantUp>0.0125</timeConstantUp>
+        <timeConstantDown>0.025</timeConstantDown>
+        <maxRotVelocity>1100</maxRotVelocity>
+        <motorConstant>8.54858e-06</motorConstant>
+        <momentConstant>0.06</momentConstant>
+        <commandSubTopic>/gazebo/command/motor_speed</commandSubTopic>
+        <motorNumber>2</motorNumber>
+        <rotorDragCoefficient>0.000806428</rotorDragCoefficient>
+        <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+        <motorSpeedPubTopic>/motor_speed/2</motorSpeedPubTopic>
+        <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
+      </plugin>
+      <plugin name='back_right_motor_model' filename='librotors_gazebo_motor_model.so'>
+        <robotNamespace/>
+        <jointName>rotor_3_joint</jointName>
+        <linkName>rotor_3</linkName>
+        <turningDirection>cw</turningDirection>
+        <timeConstantUp>0.0125</timeConstantUp>
+        <timeConstantDown>0.025</timeConstantDown>
+        <maxRotVelocity>1100</maxRotVelocity>
+        <motorConstant>8.54858e-06</motorConstant>
+        <momentConstant>0.06</momentConstant>
+        <commandSubTopic>/gazebo/command/motor_speed</commandSubTopic>
+        <motorNumber>3</motorNumber>
+        <rotorDragCoefficient>0.000806428</rotorDragCoefficient>
+        <rollingMomentCoefficient>1e-06</rollingMomentCoefficient>
+        <motorSpeedPubTopic>/motor_speed/3</motorSpeedPubTopic>
+        <rotorVelocitySlowdownSim>10</rotorVelocitySlowdownSim>
+      </plugin>
+      <plugin name='mavlink_interface' filename='librotors_gazebo_mavlink_interface.so'>
+        <robotNamespace/>
+        <imuSubTopic>/imu</imuSubTopic>
+        <mavlink_addr>INADDR_ANY</mavlink_addr>
+        <mavlink_udp_port>14560</mavlink_udp_port>
+        <motorSpeedCommandPubTopic>/gazebo/command/motor_speed</motorSpeedCommandPubTopic>
+        <control_channels>
+          <channel name='rotor1'>
+            <input_index>0</input_index>
+            <input_offset>1</input_offset>
+            <input_scaling>550</input_scaling>
+            <zero_position_disarmed>0</zero_position_disarmed>
+            <zero_position_armed>100</zero_position_armed>
+            <joint_control_type>velocity</joint_control_type>
+          </channel>
+          <channel name='rotor2'>
+            <input_index>1</input_index>
+            <input_offset>1</input_offset>
+            <input_scaling>550</input_scaling>
+            <zero_position_disarmed>0</zero_position_disarmed>
+            <zero_position_armed>100</zero_position_armed>
+            <joint_control_type>velocity</joint_control_type>
+          </channel>
+          <channel name='rotor3'>
+            <input_index>2</input_index>
+            <input_offset>1</input_offset>
+            <input_scaling>550</input_scaling>
+            <zero_position_disarmed>0</zero_position_disarmed>
+            <zero_position_armed>100</zero_position_armed>
+            <joint_control_type>velocity</joint_control_type>
+          </channel>
+          <channel name='rotor4'>
+            <input_index>3</input_index>
+            <input_offset>1</input_offset>
+            <input_scaling>550</input_scaling>
+            <zero_position_disarmed>0</zero_position_disarmed>
+            <zero_position_armed>100</zero_position_armed>
+            <joint_control_type>velocity</joint_control_type>
+          </channel>
+          <channel name='rotor5'>
+            <input_index>4</input_index>
+            <input_offset>1</input_offset>
+            <input_scaling>324.6</input_scaling>
+            <zero_position_disarmed>0</zero_position_disarmed>
+            <zero_position_armed>0</zero_position_armed>
+            <joint_control_type>velocity</joint_control_type>
+            <joint_control_pid>
+              <p>0.1</p>
+              <i>0</i>
+              <d>0</d>
+              <iMax>0.0</iMax>
+              <iMin>0.0</iMin>
+              <cmdMax>2</cmdMax>
+              <cmdMin>-2</cmdMin>
+            </joint_control_pid>
+            <joint_name>zephyr_delta_wing::propeller_joint</joint_name>
+          </channel>
+          <channel name='rotor6'>
+            <input_index>5</input_index>
+            <input_offset>0</input_offset>
+            <input_scaling>0.524</input_scaling>
+            <zero_position_disarmed>0</zero_position_disarmed>
+            <zero_position_armed>0</zero_position_armed>
+            <joint_control_type>position</joint_control_type>
+            <joint_name>zephyr_delta_wing::flap_left_joint</joint_name>
+            <joint_control_pid>
+              <p>10.0</p>
+              <i>0</i>
+              <d>0</d>
+              <iMax>0</iMax>
+              <iMin>0</iMin>
+              <cmdMax>20</cmdMax>
+              <cmdMin>-20</cmdMin>
+            </joint_control_pid>
+          </channel>
+          <channel name='rotor7'>
+            <input_index>6</input_index>
+            <input_offset>0</input_offset>
+            <input_scaling>0.524</input_scaling>
+            <zero_position_disarmed>0</zero_position_disarmed>
+            <zero_position_armed>0</zero_position_armed>
+            <joint_control_type>position</joint_control_type>
+            <joint_name>zephyr_delta_wing::flap_right_joint</joint_name>
+            <joint_control_pid>
+              <p>10.0</p>
+              <i>0</i>
+              <d>0</d>
+              <iMax>0</iMax>
+              <iMin>0</iMin>
+              <cmdMax>20</cmdMax>
+              <cmdMin>-20</cmdMin>
+            </joint_control_pid>
+          </channel>
+          <channel name='rotor8'>
+            <input_index>7</input_index>
+            <input_offset>0</input_offset>
+            <input_scaling>0.524</input_scaling>
+            <zero_position_disarmed>0</zero_position_disarmed>
+            <zero_position_armed>0</zero_position_armed>
+            <joint_control_type>position</joint_control_type>
+          </channel>
+        </control_channels>
+      </plugin>
+      <plugin name='rotors_gazebo_imu_plugin' filename='librotors_gazebo_imu_plugin.so'>
+        <robotNamespace/>
+        <linkName>/imu_link</linkName>
+        <imuTopic>/imu</imuTopic>
+        <gyroscopeNoiseDensity>0.0003394</gyroscopeNoiseDensity>
+        <gyroscopeRandomWalk>3.8785e-05</gyroscopeRandomWalk>
+        <gyroscopeBiasCorrelationTime>1000.0</gyroscopeBiasCorrelationTime>
+        <gyroscopeTurnOnBiasSigma>0.0087</gyroscopeTurnOnBiasSigma>
+        <accelerometerNoiseDensity>0.004</accelerometerNoiseDensity>
+        <accelerometerRandomWalk>0.006</accelerometerRandomWalk>
+        <accelerometerBiasCorrelationTime>300.0</accelerometerBiasCorrelationTime>
+        <accelerometerTurnOnBiasSigma>0.196</accelerometerTurnOnBiasSigma>
+      </plugin>
+      <pose frame=''>0 0 0 0 -0 0</pose>
+    </model>
+    <model name='map_satellite_32.2660215_-111.273545_500_500'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <pose frame=''>0 0 -0.5 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>525.147 525.147 1</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual0_0'>
+          <pose frame=''>-242.376 242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/0_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual0_1'>
+          <pose frame=''>-201.98 242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/0_1</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual0_2'>
+          <pose frame=''>-161.584 242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/0_2</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual0_3'>
+          <pose frame=''>-121.188 242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/0_3</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual0_4'>
+          <pose frame=''>-80.7919 242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/0_4</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual0_5'>
+          <pose frame=''>-40.3959 242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/0_5</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual0_6'>
+          <pose frame=''>-0 242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/0_6</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual0_7'>
+          <pose frame=''>40.3959 242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/0_7</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual0_8'>
+          <pose frame=''>80.7919 242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/0_8</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual0_9'>
+          <pose frame=''>121.188 242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/0_9</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual0_10'>
+          <pose frame=''>161.584 242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/0_10</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual0_11'>
+          <pose frame=''>201.98 242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/0_11</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual0_12'>
+          <pose frame=''>242.376 242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/0_12</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_0'>
+          <pose frame=''>-242.376 201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/1_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_1'>
+          <pose frame=''>-201.98 201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/1_1</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_2'>
+          <pose frame=''>-161.584 201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/1_2</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_3'>
+          <pose frame=''>-121.188 201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/1_3</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_4'>
+          <pose frame=''>-80.7919 201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/1_4</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_5'>
+          <pose frame=''>-40.3959 201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/1_5</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_6'>
+          <pose frame=''>-0 201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/1_6</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_7'>
+          <pose frame=''>40.3959 201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/1_7</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_8'>
+          <pose frame=''>80.7919 201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/1_8</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_9'>
+          <pose frame=''>121.188 201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/1_9</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_10'>
+          <pose frame=''>161.584 201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/1_10</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_11'>
+          <pose frame=''>201.98 201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/1_11</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual1_12'>
+          <pose frame=''>242.376 201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/1_12</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual2_0'>
+          <pose frame=''>-242.376 161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/2_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual2_1'>
+          <pose frame=''>-201.98 161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/2_1</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual2_2'>
+          <pose frame=''>-161.584 161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/2_2</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual2_3'>
+          <pose frame=''>-121.188 161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/2_3</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual2_4'>
+          <pose frame=''>-80.7919 161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/2_4</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual2_5'>
+          <pose frame=''>-40.3959 161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/2_5</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual2_6'>
+          <pose frame=''>-0 161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/2_6</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual2_7'>
+          <pose frame=''>40.3959 161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/2_7</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual2_8'>
+          <pose frame=''>80.7919 161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/2_8</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual2_9'>
+          <pose frame=''>121.188 161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/2_9</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual2_10'>
+          <pose frame=''>161.584 161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/2_10</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual2_11'>
+          <pose frame=''>201.98 161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/2_11</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual2_12'>
+          <pose frame=''>242.376 161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/2_12</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual3_0'>
+          <pose frame=''>-242.376 121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/3_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual3_1'>
+          <pose frame=''>-201.98 121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/3_1</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual3_2'>
+          <pose frame=''>-161.584 121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/3_2</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual3_3'>
+          <pose frame=''>-121.188 121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/3_3</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual3_4'>
+          <pose frame=''>-80.7919 121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/3_4</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual3_5'>
+          <pose frame=''>-40.3959 121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/3_5</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual3_6'>
+          <pose frame=''>-0 121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/3_6</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual3_7'>
+          <pose frame=''>40.3959 121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/3_7</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual3_8'>
+          <pose frame=''>80.7919 121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/3_8</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual3_9'>
+          <pose frame=''>121.188 121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/3_9</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual3_10'>
+          <pose frame=''>161.584 121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/3_10</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual3_11'>
+          <pose frame=''>201.98 121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/3_11</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual3_12'>
+          <pose frame=''>242.376 121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/3_12</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual4_0'>
+          <pose frame=''>-242.376 80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/4_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual4_1'>
+          <pose frame=''>-201.98 80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/4_1</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual4_2'>
+          <pose frame=''>-161.584 80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/4_2</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual4_3'>
+          <pose frame=''>-121.188 80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/4_3</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual4_4'>
+          <pose frame=''>-80.7919 80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/4_4</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual4_5'>
+          <pose frame=''>-40.3959 80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/4_5</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual4_6'>
+          <pose frame=''>-0 80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/4_6</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual4_7'>
+          <pose frame=''>40.3959 80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/4_7</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual4_8'>
+          <pose frame=''>80.7919 80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/4_8</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual4_9'>
+          <pose frame=''>121.188 80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/4_9</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual4_10'>
+          <pose frame=''>161.584 80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/4_10</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual4_11'>
+          <pose frame=''>201.98 80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/4_11</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual4_12'>
+          <pose frame=''>242.376 80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/4_12</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual5_0'>
+          <pose frame=''>-242.376 40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/5_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual5_1'>
+          <pose frame=''>-201.98 40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/5_1</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual5_2'>
+          <pose frame=''>-161.584 40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/5_2</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual5_3'>
+          <pose frame=''>-121.188 40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/5_3</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual5_4'>
+          <pose frame=''>-80.7919 40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/5_4</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual5_5'>
+          <pose frame=''>-40.3959 40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/5_5</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual5_6'>
+          <pose frame=''>-0 40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/5_6</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual5_7'>
+          <pose frame=''>40.3959 40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/5_7</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual5_8'>
+          <pose frame=''>80.7919 40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/5_8</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual5_9'>
+          <pose frame=''>121.188 40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/5_9</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual5_10'>
+          <pose frame=''>161.584 40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/5_10</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual5_11'>
+          <pose frame=''>201.98 40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/5_11</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual5_12'>
+          <pose frame=''>242.376 40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/5_12</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual6_0'>
+          <pose frame=''>-242.376 0 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/6_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual6_1'>
+          <pose frame=''>-201.98 0 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/6_1</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual6_2'>
+          <pose frame=''>-161.584 0 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/6_2</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual6_3'>
+          <pose frame=''>-121.188 0 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/6_3</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual6_4'>
+          <pose frame=''>-80.7919 0 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/6_4</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual6_5'>
+          <pose frame=''>-40.3959 0 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/6_5</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual6_6'>
+          <pose frame=''>-0 0 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/6_6</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual6_7'>
+          <pose frame=''>40.3959 0 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/6_7</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual6_8'>
+          <pose frame=''>80.7919 0 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/6_8</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual6_9'>
+          <pose frame=''>121.188 0 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/6_9</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual6_10'>
+          <pose frame=''>161.584 0 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/6_10</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual6_11'>
+          <pose frame=''>201.98 0 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/6_11</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual6_12'>
+          <pose frame=''>242.376 0 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/6_12</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual7_0'>
+          <pose frame=''>-242.376 -40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/7_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual7_1'>
+          <pose frame=''>-201.98 -40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/7_1</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual7_2'>
+          <pose frame=''>-161.584 -40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/7_2</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual7_3'>
+          <pose frame=''>-121.188 -40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/7_3</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual7_4'>
+          <pose frame=''>-80.7919 -40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/7_4</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual7_5'>
+          <pose frame=''>-40.3959 -40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/7_5</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual7_6'>
+          <pose frame=''>-0 -40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/7_6</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual7_7'>
+          <pose frame=''>40.3959 -40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/7_7</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual7_8'>
+          <pose frame=''>80.7919 -40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/7_8</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual7_9'>
+          <pose frame=''>121.188 -40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/7_9</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual7_10'>
+          <pose frame=''>161.584 -40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/7_10</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual7_11'>
+          <pose frame=''>201.98 -40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/7_11</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual7_12'>
+          <pose frame=''>242.376 -40.3959 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/7_12</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual8_0'>
+          <pose frame=''>-242.376 -80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/8_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual8_1'>
+          <pose frame=''>-201.98 -80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/8_1</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual8_2'>
+          <pose frame=''>-161.584 -80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/8_2</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual8_3'>
+          <pose frame=''>-121.188 -80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/8_3</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual8_4'>
+          <pose frame=''>-80.7919 -80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/8_4</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual8_5'>
+          <pose frame=''>-40.3959 -80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/8_5</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual8_6'>
+          <pose frame=''>-0 -80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/8_6</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual8_7'>
+          <pose frame=''>40.3959 -80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/8_7</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual8_8'>
+          <pose frame=''>80.7919 -80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/8_8</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual8_9'>
+          <pose frame=''>121.188 -80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/8_9</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual8_10'>
+          <pose frame=''>161.584 -80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/8_10</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual8_11'>
+          <pose frame=''>201.98 -80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/8_11</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual8_12'>
+          <pose frame=''>242.376 -80.7919 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/8_12</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual9_0'>
+          <pose frame=''>-242.376 -121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/9_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual9_1'>
+          <pose frame=''>-201.98 -121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/9_1</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual9_2'>
+          <pose frame=''>-161.584 -121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/9_2</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual9_3'>
+          <pose frame=''>-121.188 -121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/9_3</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual9_4'>
+          <pose frame=''>-80.7919 -121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/9_4</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual9_5'>
+          <pose frame=''>-40.3959 -121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/9_5</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual9_6'>
+          <pose frame=''>-0 -121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/9_6</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual9_7'>
+          <pose frame=''>40.3959 -121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/9_7</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual9_8'>
+          <pose frame=''>80.7919 -121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/9_8</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual9_9'>
+          <pose frame=''>121.188 -121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/9_9</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual9_10'>
+          <pose frame=''>161.584 -121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/9_10</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual9_11'>
+          <pose frame=''>201.98 -121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/9_11</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual9_12'>
+          <pose frame=''>242.376 -121.188 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/9_12</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual10_0'>
+          <pose frame=''>-242.376 -161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/10_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual10_1'>
+          <pose frame=''>-201.98 -161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/10_1</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual10_2'>
+          <pose frame=''>-161.584 -161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/10_2</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual10_3'>
+          <pose frame=''>-121.188 -161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/10_3</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual10_4'>
+          <pose frame=''>-80.7919 -161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/10_4</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual10_5'>
+          <pose frame=''>-40.3959 -161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/10_5</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual10_6'>
+          <pose frame=''>-0 -161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/10_6</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual10_7'>
+          <pose frame=''>40.3959 -161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/10_7</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual10_8'>
+          <pose frame=''>80.7919 -161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/10_8</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual10_9'>
+          <pose frame=''>121.188 -161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/10_9</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual10_10'>
+          <pose frame=''>161.584 -161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/10_10</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual10_11'>
+          <pose frame=''>201.98 -161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/10_11</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual10_12'>
+          <pose frame=''>242.376 -161.584 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/10_12</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual11_0'>
+          <pose frame=''>-242.376 -201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/11_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual11_1'>
+          <pose frame=''>-201.98 -201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/11_1</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual11_2'>
+          <pose frame=''>-161.584 -201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/11_2</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual11_3'>
+          <pose frame=''>-121.188 -201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/11_3</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual11_4'>
+          <pose frame=''>-80.7919 -201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/11_4</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual11_5'>
+          <pose frame=''>-40.3959 -201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/11_5</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual11_6'>
+          <pose frame=''>-0 -201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/11_6</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual11_7'>
+          <pose frame=''>40.3959 -201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/11_7</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual11_8'>
+          <pose frame=''>80.7919 -201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/11_8</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual11_9'>
+          <pose frame=''>121.188 -201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/11_9</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual11_10'>
+          <pose frame=''>161.584 -201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/11_10</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual11_11'>
+          <pose frame=''>201.98 -201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/11_11</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual11_12'>
+          <pose frame=''>242.376 -201.98 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/11_12</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual12_0'>
+          <pose frame=''>-242.376 -242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/12_0</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual12_1'>
+          <pose frame=''>-201.98 -242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/12_1</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual12_2'>
+          <pose frame=''>-161.584 -242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/12_2</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual12_3'>
+          <pose frame=''>-121.188 -242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/12_3</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual12_4'>
+          <pose frame=''>-80.7919 -242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/12_4</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual12_5'>
+          <pose frame=''>-40.3959 -242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/12_5</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual12_6'>
+          <pose frame=''>-0 -242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/12_6</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual12_7'>
+          <pose frame=''>40.3959 -242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/12_7</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual12_8'>
+          <pose frame=''>80.7919 -242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/12_8</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual12_9'>
+          <pose frame=''>121.188 -242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/12_9</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual12_10'>
+          <pose frame=''>161.584 -242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/12_10</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual12_11'>
+          <pose frame=''>201.98 -242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/12_11</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='visual12_12'>
+          <pose frame=''>242.376 -242.376 -0.5 0 -0 1.5708</pose>
+          <geometry>
+            <box>
+              <size>40.3959 40.3959 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/scripts</uri>
+              <uri>model://map_satellite_32.2660215_-111.273545_500_500/materials/textures</uri>
+              <name>map_satellite_32.2660215_-111.273545_500_500/12_12</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <pose frame=''>76.9006 12.3044 0 0 0 -1.33197</pose>
+    </model>
+    <model name='apriltag'>
+      <static>0</static>
+      <link name='link'>
+        <inertial>
+          <mass>20</mass>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>1 1 0.5</size>
+            </box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <cast_shadows>0</cast_shadows>
+          <geometry>
+            <box>
+              <size>1 1 0.5</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>AprilTag/Image</name>
+              <uri>__default__</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <pose frame=''>9.48828 1.50767 0 0 -0 0</pose>
+    </model>
+    <state world_name='default'>
+      <sim_time>59 882000000</sim_time>
+      <real_time>138 843512628</real_time>
+      <wall_time>1558223939 119664818</wall_time>
+      <iterations>29941</iterations>
+      <model name='apriltag'>
+        <pose frame=''>9.48823 1.50765 0.250001 3e-06 -9e-06 -3.9e-05</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose frame=''>9.48823 1.50765 0.250001 3e-06 -9e-06 -3.9e-05</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>3.19504 -0.16596 8.44392 -2.50773 1.45597 -3.14143</acceleration>
+          <wrench>63.9007 -3.3192 168.878 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='f450'>
+        <pose frame=''>0.00097 0.000721 0.039943 7.1e-05 -1e-05 0.011441</pose>
+        <scale>1 1 1</scale>
+        <link name='/imu_link'>
+          <pose frame=''>0.00097 0.000721 0.039943 7.2e-05 -1.7e-05 0.011442</pose>
+          <velocity>0.00014 -0.001603 -0.002237 0.042426 0.005363 -0.001282</velocity>
+          <acceleration>-0.133084 -1.31525 -1.06168 -0.625069 0.76105 2.25111</acceleration>
+          <wrench>-0.001996 -0.019729 -0.015925 0 -0 0</wrench>
+        </link>
+        <link name='base_link'>
+          <pose frame=''>0.00097 0.000721 0.039943 7.1e-05 -1e-05 0.011441</pose>
+          <velocity>0.000181 -0.00165 -0.002213 0.041509 0.005223 -0.000374</velocity>
+          <acceleration>-0.19622 -1.3354 -0.998821 2.14043 1.55956 -0.26829</acceleration>
+          <wrench>-0.39244 -2.6708 -1.99764 0 -0 0</wrench>
+        </link>
+        <link name='f450/robot_camera'>
+          <pose frame=''>0.120961 0.00209 0.099945 7.2e-05 -1.7e-05 0.011442</pose>
+          <velocity>0.000461 -0.004253 -0.002822 0.042422 0.00536 -0.001256</velocity>
+          <acceleration>-0.369097 -3.45246 -0.546003 -0.626196 0.783367 2.23471</acceleration>
+          <wrench>-0.005536 -0.051787 -0.00819 0 -0 0</wrench>
+        </link>
+        <link name='f450/robot_camera_down'>
+          <pose frame=''>-0.119023 -0.000652 0.049941 1.26105 1.57072 1.2725</pose>
+          <velocity>0.000191 -0.001866 -0.001652 0.042426 0.005363 -0.001282</velocity>
+          <acceleration>-0.173652 -1.54602 -1.57694 -0.62518 0.761394 2.25107</acceleration>
+          <wrench>-0.002605 -0.02319 -0.023654 0 -0 0</wrench>
+        </link>
+        <link name='f450/robot_sonar_down'>
+          <pose frame=''>-0.149021 -0.000996 0.049941 1.2614 1.57072 1.27285</pose>
+          <velocity>0.000191 -0.00183 -0.001506 0.042424 0.005362 -0.001271</velocity>
+          <acceleration>-0.174421 -1.51761 -1.70839 -0.625266 0.769751 2.24446</acceleration>
+          <wrench>-0.002616 -0.022764 -0.025626 0 -0 0</wrench>
+        </link>
+        <link name='rotor_0'>
+          <pose frame=''>0.161777 -0.156457 0.149935 6.8e-05 -1.6e-05 0.006563</pose>
+          <velocity>0.000529 -0.006385 -0.009638 0.041713 0.005347 0.000165</velocity>
+          <acceleration>-0.84204 -5.1242 -5.5439 3.12765 1.35569 -3.14005</acceleration>
+          <wrench>-0.00421 -0.025621 -0.027719 0 -0 0</wrench>
+        </link>
+        <link name='rotor_1'>
+          <pose frame=''>-0.159841 0.157884 0.149952 6.8e-05 -1.6e-05 0.006563</pose>
+          <velocity>0.000922 -0.005981 0.005162 0.041709 0.005342 0.000165</velocity>
+          <acceleration>-0.619969 -4.89613 3.52139 3.12093 1.35838 -3.14006</acceleration>
+          <wrench>-0.0031 -0.024481 0.017607 0 -0 0</wrench>
+        </link>
+        <link name='rotor_2'>
+          <pose frame=''>0.158138 0.161522 0.149957 6.8e-05 -1.6e-05 0.006563</pose>
+          <velocity>0.000924 -0.006379 0.003617 0.041712 0.005335 0.000165</velocity>
+          <acceleration>-0.618569 -5.12092 5.12737 3.11596 1.36184 -3.14006</acceleration>
+          <wrench>-0.003093 -0.025605 0.025637 0 -0 0</wrench>
+        </link>
+        <link name='rotor_3'>
+          <pose frame=''>-0.156202 -0.160095 0.149929 6.8e-05 -1.6e-05 0.006563</pose>
+          <velocity>0.000526 -0.005988 -0.008091 0.041721 0.005332 0.000165</velocity>
+          <acceleration>-0.843516 -4.8998 -7.14945 3.11806 1.36327 -3.14007</acceleration>
+          <wrench>-0.004218 -0.024499 -0.035747 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='f450-3'>
+        <pose frame=''>50 1.56071 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose frame=''>50 1.56071 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='map_satellite_32.2660215_-111.273545_500_500'>
+        <pose frame=''>76.9006 12.3044 0 0 0 -1.33197</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose frame=''>76.9006 12.3044 0 0 0 -1.33197</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <light name='sun'>
+        <pose frame=''>0 0 10 0 -0 0</pose>
+      </light>
+    </state>
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose frame=''>9.46639 -6.83805 21.0491 0 1.15564 1.5842</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+  </world>
+</sdf>

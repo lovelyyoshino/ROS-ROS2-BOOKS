@@ -19,3 +19,6 @@
 [submodule "第三章/FAST_LIO2_Noted"]
 	path = 第三章/FAST_LIO2_Noted
 	url = https://github.com/lovelyyoshino/FAST_LIO2_Noted.git
+[submodule "第六章/Prometheus"]
+	path = 第六章/Prometheus
+	url = https://github.com/amov-lab/Prometheus.git
