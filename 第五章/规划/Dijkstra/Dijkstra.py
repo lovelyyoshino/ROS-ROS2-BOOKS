@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import matplotlib.pyplot as plt
 import math
 
@@ -26,13 +27,13 @@ class Dijkstra:
         self.resolution = resolution
         self.robot_radius = robot_radius
         self.calc_obstacle_map(ox, oy)
-        self.motion = self.get_motion_model()#机器人运动位移选择
+        self.motion = self.get_motion_model()  # 机器人运动位移选择
 
-    class Node:# 封装的Node类
+    class Node:  # 封装的Node类
         def __init__(self, x, y, cost, parent_index):
             self.x = x  # 栅格地图的索引
             self.y = y  # 栅格地图的索引
-            self.cost = cost # 需要的代价
+            self.cost = cost  # 需要的代价
             self.parent_index = parent_index  # 上一个节点的索引
 
         def __str__(self):
@@ -57,16 +58,17 @@ class Dijkstra:
         goal_node = self.Node(self.calc_xy_index(gx, self.min_x),
                               self.calc_xy_index(gy, self.min_y), 0.0, -1)
 
-        open_set, closed_set = dict(), dict()# 设置的set集合
-        open_set[self.calc_index(start_node)] = start_node #将索引存入到open_set中
+        open_set, closed_set = dict(), dict()  # 设置的set集合
+        open_set[self.calc_index(start_node)] = start_node  # 将索引存入到open_set中
 
         while 1:
-            c_id = min(open_set, key=lambda o: open_set[o].cost)#选择出在open_set集合里面最小的cost节点作为下一次的更新的起始点
-            current = open_set[c_id]#找到对应的Node节点
+            # 选择出在open_set集合里面最小的cost节点作为下一次的更新的起始点
+            c_id = min(open_set, key=lambda o: open_set[o].cost)
+            current = open_set[c_id]  # 找到对应的Node节点
 
             if show_animation:
                 plt.plot(self.calc_position(current.x, self.min_x),
-                         self.calc_position(current.y, self.min_y), "xc")#绘制所在位置的点
+                         self.calc_position(current.y, self.min_y), "xc")  # 绘制所在位置的点
                 # 用于使用esc键停止模拟
                 plt.gcf().canvas.mpl_connect(
                     'key_release_event',
@@ -77,9 +79,9 @@ class Dijkstra:
             # 如果当前的位置为终点位置
             if current.x == goal_node.x and current.y == goal_node.y:
                 print("Find goal")
-                goal_node.parent_index = current.parent_index#拿到父index，并更新到goal_node中
+                goal_node.parent_index = current.parent_index  # 拿到父index，并更新到goal_node中
                 goal_node.cost = current.cost
-                break# 跳出while
+                break  # 跳出while
 
             # 从open_set中移除当前的索引，并将该索引存入到closed_set中
             del open_set[c_id]
@@ -114,9 +116,9 @@ class Dijkstra:
     def calc_final_path(self, goal_node, closed_set):
         # 生成最后的路径
         rx, ry = [self.calc_position(goal_node.x, self.min_x)], [
-            self.calc_position(goal_node.y, self.min_y)]# 计算出当前真实的位置
+            self.calc_position(goal_node.y, self.min_y)]  # 计算出当前真实的位置
         parent_index = goal_node.parent_index
-        while parent_index != -1:# 判断是否存在父节点
+        while parent_index != -1:  # 判断是否存在父节点
             n = closed_set[parent_index]
             rx.append(self.calc_position(n.x, self.min_x))
             ry.append(self.calc_position(n.y, self.min_y))
@@ -124,13 +126,16 @@ class Dijkstra:
 
         return rx, ry
     # 根据index和分辨率转化为真实的距离
+
     def calc_position(self, index, minp):
         pos = index * self.resolution + minp
         return pos
     # 计算出在地图中的距离
+
     def calc_xy_index(self, position, minp):
         return round((position - minp) / self.resolution)
     # 计算出该点在栅格地图Node中的信息
+
     def calc_index(self, node):
         return (node.y - self.min_y) * self.x_width + (node.x - self.min_x)
 
@@ -163,7 +168,7 @@ class Dijkstra:
         print("min_y:", self.min_y)
         print("max_x:", self.max_x)
         print("max_y:", self.max_y)
-        #获得在地图中障碍物的长宽
+        # 获得在地图中障碍物的长宽
         self.x_width = round((self.max_x - self.min_x) / self.resolution)
         self.y_width = round((self.max_y - self.min_y) / self.resolution)
         print("x_width:", self.x_width)
@@ -179,9 +184,9 @@ class Dijkstra:
                 y = self.calc_position(iy, self.min_y)
                 # 计算出地图中对应真实场景中的x,y距离
                 for iox, ioy in zip(ox, oy):
-                    d = math.hypot(iox - x, ioy - y)# 返回欧几里得范数
-                    if d <= self.robot_radius:# 通过机器人半径设置障碍物检测
-                        self.obstacle_map[ix][iy] = True#将存在有障碍物的设置为True
+                    d = math.hypot(iox - x, ioy - y)  # 返回欧几里得范数
+                    if d <= self.robot_radius:  # 通过机器人半径设置障碍物检测
+                        self.obstacle_map[ix][iy] = True  # 将存在有障碍物的设置为True
                         break
 
     @staticmethod
@@ -238,7 +243,7 @@ def main():
         plt.grid(True)
         plt.axis("equal")
 
-    dijkstra = Dijkstra(ox, oy, grid_size, robot_radius)#初始化信息
+    dijkstra = Dijkstra(ox, oy, grid_size, robot_radius)  # 初始化信息
     rx, ry = dijkstra.planning(sx, sy, gx, gy)
 
     if show_animation:  # pragma: no cover
