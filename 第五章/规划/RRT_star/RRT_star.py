@@ -91,14 +91,13 @@ class RRTStar(RRT):# 这里作为子类继承了RRT类
                     and new_node):  # 如果达到目标
                 last_index = self.search_best_goal_node()# 根据这些节点重新寻找最优的节点
                 if last_index is not None:
-                    return self.generate_final_course(last_index)
+                    return self.generate_final_course(last_index)# 生成从终点到起点的路径
 
         print("reached max iteration")
 
         last_index = self.search_best_goal_node()
         if last_index is not None:
             return self.generate_final_course(last_index)
-
         return None
 
     def choose_parent(self, new_node, near_inds):
@@ -129,27 +128,28 @@ class RRTStar(RRT):# 这里作为子类继承了RRT类
 
         return new_node
 
+    # 根据这些节点重新寻找最优的节点
     def search_best_goal_node(self):
         dist_to_goal_list = [
             self.calc_dist_to_goal(n.x, n.y) for n in self.node_list
-        ]
+        ]# 从节点列表中计算出距离到目标点的距离
         goal_inds = [
             dist_to_goal_list.index(i) for i in dist_to_goal_list
             if i <= self.expand_dis
-        ]
+        ]# 根据距离到目标点的距离来获取到目标点的索引的node节点
 
         safe_goal_inds = []
-        for goal_ind in goal_inds:
-            t_node = self.steer(self.node_list[goal_ind], self.goal_node)
-            if self.check_collision(t_node, self.obstacle_list):
-                safe_goal_inds.append(goal_ind)
+        for goal_ind in goal_inds:# 拿出所有符合条件的node节点
+            t_node = self.steer(self.node_list[goal_ind], self.goal_node)#计算出与目标的下一个节点的选取
+            if self.check_collision(t_node, self.obstacle_list):# 检查是否发生碰撞
+                safe_goal_inds.append(goal_ind)# 将可以安全到达目标的node节点存放到safe_goal_inds中
 
         if not safe_goal_inds:
             return None
 
-        min_cost = min([self.node_list[i].cost for i in safe_goal_inds])
+        min_cost = min([self.node_list[i].cost for i in safe_goal_inds])#计算出最小的代价
         for i in safe_goal_inds:
-            if self.node_list[i].cost == min_cost:
+            if self.node_list[i].cost == min_cost:#返回最小的代价的索引
                 return i
 
         return None

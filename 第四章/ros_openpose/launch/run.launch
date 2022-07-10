@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+run.launch: this file does no more than calling other launch file
+Author: Ravi Joshi
+Date: 2019/11/23
+-->
+<launch>
+
+  <!-- set this flag to switch ros_openpose to a synchronous setting -->
+  <arg name="synchronous" default="false" />
+
+  <!-- specify path to python openpose library (specifying this will switch synchronous setting from c++ to python) -->
+  <arg name="py_openpose_path" default="none" />
+
+  <!-- the value of this argument can only be one of the following: realsense, kinect, zed2, nodepth -->
+  <arg name="camera" default="realsense" />
+
+  <!-- set this flag to see invoke RViz -->
+  <arg name="rviz" default="true" />
+
+  <!-- set this flag to invoke the visualization of the skeleton -->
+  <arg name="skeleton" default="true" />
+
+  <!-- set this flag to see the pointcloud in the visualization inside RViz  -->
+  <arg name="pointcloud" default="true" />
+
+  <!-- set this flag to invoke the visualization of the hands of the skeleton -->
+  <arg name="skeleton_hands" default="false" />
+
+  <!--
+   the standard openpose command-line arguments are also supported.
+   to do so, please change the value, as shown in the example below.
+  -->
+  <?ignore
+    <arg name="openpose_args" value="--hand --disable_multi_thread --model_folder /home/ravi/openpose/models/" />
+  ?>
+  <!-- full path to the model dir of openpose -->
+  <arg name="openpose_args" value="--model_folder /home/ravi/openpose/models/" />
+
+  <!-- rostopic to publish the 3D skeleton data -->
+  <arg name="pub_topic" default="/frame" />
+
+  <!-- thickness of the line used to draw skeleton for visualization inside RViz -->
+  <arg name="skeleton_line_width" default="0.01" />
+
+  <!-- size of the text used to indicate the id of a skeleton for visualization inside RViz -->
+  <arg name="id_text_size" default="0.2" />
+
+  <!-- offeset of the text used to indicate the id of a skeleton for visualization inside RViz -->
+  <arg name="id_text_offset" default="-0.05" />
+
+  <!-- flag to enable printing ros message to terminal -->
+  <arg name="print" default="true" />
+
+  <include file="$(find ros_openpose)/launch/config_$(arg camera).launch" >
+    <arg name="rviz" value="$(arg rviz)" />
+    <arg name="print" value="$(arg print)" />
+    <arg name="skeleton" value="$(arg skeleton)" />
+    <arg name="pub_topic" value="$(arg pub_topic)" />
+    <arg name="pointcloud" value="$(arg pointcloud)" />
+    <arg name="id_text_size" value="$(arg id_text_size)" />
+    <arg name="openpose_args" value="$(arg openpose_args)" />
+    <arg name="skeleton_hands" value="$(arg skeleton_hands)" />
+    <arg name="id_text_offset" value="$(arg id_text_offset)" />
+    <arg name="skeleton_line_width" value="$(arg skeleton_line_width)" />
+    <arg name="synchronous" value="$(arg synchronous)" />
+    <arg name="py_openpose_path" value="$(arg py_openpose_path)" />
+  </include>
+</launch>
