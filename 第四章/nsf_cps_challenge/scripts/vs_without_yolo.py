@@ -11,7 +11,7 @@ from std_msgs.msg import String, Header
 
 class OffbPosCtl:
     curr_pose = PoseStamped()#保存当前的位置
-    waypointIndex = 0#起降点索引
+    waypointIndex = 0#有效的飞行点的索引
     distThreshold = 0.4#位置容忍距离为0.4m
     des_pose = PoseStamped()#目标位置
     saved_location = None#是否保存定位
@@ -113,20 +113,24 @@ class OffbPosCtl:
         des_vel.velocity.z = z
         return des_vel
 
-    def lawnmover(self, rect_x, rect_y, height, offset, offset_x):#获取移动的位置
+    def lawnmover(self, rect_x, rect_y, height, offset, offset_x):#获取移动模式下以位移offset_x来获得的 rect_x 和 rect_y位置
         """ lawnmover pattern over a rectangle of size rect_x and rect_y with increasing step size in x.
             offset - offset to where drone begins search (in x)
             offset_x is the value by which drone moves forward in x direction after each left to right movements
         """
-        if len(self.loc) == 0:
-            takeoff = [self.curr_pose.pose.position.x, self.curr_pose.pose.position.y, height, 0, 0, 0, 0]
+        if len(self.loc) == 0:#如果没有暂存位置信息
+            takeoff = [self.curr_pose.pose.position.x, self.curr_pose.pose.position.y, height, 0, 0, 0, 0]#获取初始位置
             move_to_offset = [self.curr_pose.pose.position.x + offset,
-                              self.curr_pose.pose.position.y - rect_y/2, height, 0, 0, 0, 0]
+                              self.curr_pose.pose.position.y - rect_y/2, height, 0, 0, 0, 0]#获取移动到指定位置的位置，先减去1/2rect_y这样就平分了搜索区域
             self.loc.append(takeoff)
             self.loc.append(move_to_offset)
             left = True
             while True:
-                if left:
+                if left:#如果是左移标志位
+                    x = self.loc[len(self.loc) - 1][0]
+                    y = self.loc[len(self.loc) - 1][1] + rect_y/3
+                    z = self.loc[len(self.loc) - 1][2]
+                    self.loc.append([x, y, z, 0, 0, 0, 0])#以1/3的横向产生移动
                     x = self.loc[len(self.loc) - 1][0]
                     y = self.loc[len(self.loc) - 1][1] + rect_y/3
                     z = self.loc[len(self.loc) - 1][2]
@@ -135,16 +139,12 @@ class OffbPosCtl:
                     y = self.loc[len(self.loc) - 1][1] + rect_y/3
                     z = self.loc[len(self.loc) - 1][2]
                     self.loc.append([x, y, z, 0, 0, 0, 0])
-                    x = self.loc[len(self.loc) - 1][0]
-                    y = self.loc[len(self.loc) - 1][1] + rect_y/3
-                    z = self.loc[len(self.loc) - 1][2]
-                    self.loc.append([x, y, z, 0, 0, 0, 0])
-                    left = False
-                    x = self.loc[len(self.loc) - 1][0] + offset_x
+                    left = False#下一次要右移
+                    x = self.loc[len(self.loc) - 1][0] + offset_x#以offset_x的纵向产生移动
                     y = self.loc[len(self.loc) - 1][1]
                     z = self.loc[len(self.loc) - 1][2]
                     self.loc.append([x, y, z, 0, 0, 0, 0])
-                    if x > rect_x:
+                    if x > rect_x:#如果已经超过了纵向的范围
                         break
                 else:
                     x = self.loc[len(self.loc) - 1][0]
@@ -159,7 +159,7 @@ class OffbPosCtl:
                     y = self.loc[len(self.loc) - 1][1] - rect_y/3
                     z = self.loc[len(self.loc) - 1][2]
                     self.loc.append([x, y, z, 0, 0, 0, 0])
-                    left = True
+                    left = True#下一次要左移
                     x = self.loc[len(self.loc) - 1][0] + offset_x
                     y = self.loc[len(self.loc) - 1][1]
                     z = self.loc[len(self.loc) - 1][2]
@@ -167,21 +167,22 @@ class OffbPosCtl:
                     if x > rect_x:
                         break
 
-        rate = rospy.Rate(10)
-        self.des_pose = self.copy_pose(self.curr_pose)
-        shape = len(self.loc)
-        pose_pub = rospy.Publisher('/mavros/setpoint_position/local', PoseStamped, queue_size=10)
-        print self.mode
+        rate = rospy.Rate(10)#设置发布频率
+        self.des_pose = self.copy_pose(self.curr_pose)#复制当前位置
+        shape = len(self.loc)#获取位置信息的长度
+        pose_pub = rospy.Publisher('/mavros/setpoint_position/local', PoseStamped, queue_size=10)#发布位置信息
+        print (self.mode)
 
-        while self.mode == "SURVEY" and not rospy.is_shutdown():
+        while self.mode == "SURVEY" and not rospy.is_shutdown():#如果模式是搜索模式
             if self.waypointIndex == shape:
                 self.waypointIndex = 1
 
-            if self.isReadyToFly:
+            if self.isReadyToFly:#如果可以飞行,也就是处于OFFBOARD状态
 
-                des_x = self.loc[self.waypointIndex][0]
+                des_x = self.loc[self.waypointIndex][0]#获取目标位置
                 des_y = self.loc[self.waypointIndex][1]
                 des_z = self.loc[self.waypointIndex][2]
+                #拿到位置后赋值给des_pose
                 self.des_pose.pose.position.x = des_x
                 self.des_pose.pose.position.y = des_y
                 self.des_pose.pose.position.z = des_z
@@ -190,24 +191,24 @@ class OffbPosCtl:
                 self.des_pose.pose.orientation.z = self.loc[self.waypointIndex][5]
                 self.des_pose.pose.orientation.w = self.loc[self.waypointIndex][6]
 
-                curr_x = self.curr_pose.pose.position.x
+                curr_x = self.curr_pose.pose.position.x#拿到的当前位置
                 curr_y = self.curr_pose.pose.position.y
                 curr_z = self.curr_pose.pose.position.z
 
                 dist = math.sqrt((curr_x - des_x)*(curr_x - des_x) + (curr_y - des_y)*(curr_y - des_y) +
-                                 (curr_z - des_z)*(curr_z - des_z))
-                if dist < self.distThreshold:
+                                 (curr_z - des_z)*(curr_z - des_z))#计算距离
+                if dist < self.distThreshold:#在0.4范围内搜索
                     self.waypointIndex += 1
 
             pose_pub.publish(self.des_pose)
 
             rate.sleep()
 
-    def hover(self):
+    def hover(self):#悬停模式，将模式设置为HOVER
         """ hover at height mentioned in location
             set mode as HOVER to make it work
         """
-        location = self.hover_loc
+        location = self.hover_loc#获取悬停位置
         loc = [location,
                location,
                location,
@@ -216,25 +217,25 @@ class OffbPosCtl:
                location,
                location,
                location,
-               location]
+               location]#创建一个位置列表
 
         rate = rospy.Rate(10)
         rate.sleep()
-        shape = len(loc)
-        pose_pub = rospy.Publisher('/mavros/setpoint_position/local', PoseStamped, queue_size=10)
-        des_pose = self.copy_pose(self.curr_pose)
-        waypoint_index = 0
-        sim_ctr = 1
-        print self.mode
+        shape = len(loc)#获取位置信息的长度
+        pose_pub = rospy.Publisher('/mavros/setpoint_position/local', PoseStamped, queue_size=10)#发布位置信息
+        des_pose = self.copy_pose(self.curr_pose)#复制当前位置
+        waypoint_index = 0#设置位置索引
+        sim_ctr = 1#设置计数器
+        print (self.mode)
 
         while self.mode == "HOVER" and not rospy.is_shutdown():
-            if waypoint_index == shape:
+            if waypoint_index == shape:#重新累计操作
                 waypoint_index = 0
                 sim_ctr += 1
-                print "HOVER STOP COUNTER: " + str(sim_ctr)
+                print ("HOVER STOP COUNTER: " + str(sim_ctr))
             if self.isReadyToFly:
 
-                des_x = loc[waypoint_index][0]
+                des_x = loc[waypoint_index][0]#获取目标位置
                 des_y = loc[waypoint_index][1]
                 des_z = loc[waypoint_index][2]
                 des_pose.pose.position.x = des_x
@@ -245,42 +246,42 @@ class OffbPosCtl:
                 des_pose.pose.orientation.z = loc[waypoint_index][5]
                 des_pose.pose.orientation.w = loc[waypoint_index][6]
 
-                curr_x = self.curr_pose.pose.position.x
+                curr_x = self.curr_pose.pose.position.x#拿到的当前位置
                 curr_y = self.curr_pose.pose.position.y
                 curr_z = self.curr_pose.pose.position.z
 
                 dist = math.sqrt((curr_x - des_x)*(curr_x - des_x) + (curr_y - des_y)*(curr_y - des_y) +
                                  (curr_z - des_z)*(curr_z - des_z))
-                if dist < self.distThreshold:
+                if dist < self.distThreshold:#在0.4范围内搜索
                     waypoint_index += 1
 
-            if sim_ctr == 50:
+            if sim_ctr == 50:#如果计数器达到50，则停止悬停
                 pass
                 # self.pub.publish("HOVER COMPLETE")  # FIX  UNCOMMENT AND REMOVE pass
 
             pose_pub.publish(des_pose)
             rate.sleep()
 
-    def scan(self, rect_y, offset_x):
+    def scan(self, rect_y, offset_x):#扫描模式，将模式设置为SCAN
         move = ""
-        rate = rospy.Rate(10)
-        if self.waypointIndex % 4 == 1:
+        rate = rospy.Rate(10)#设置发布频率
+        if self.waypointIndex % 4 == 1:#如果是第一个位置
             move = "back"
         else:
-            if ((self.waypointIndex + (self.waypointIndex % 4)) / 4) % 2 == 0:  # HACK
-                move = "right"
+            if ((self.waypointIndex + (self.waypointIndex % 4)) / 4) % 2 == 0:  # 设置左右
+                move = "right"#设置右边
             else:
-                move = "left"
-        print self.mode
+                move = "left"#设置左边
+        print (self.mode)
         loc = self.curr_pose.pose.position
-        print loc
-        print rect_y
-        print offset_x
+        print (loc)
+        print (rect_y)
+        print (offset_x)
         while self.mode == "SCAN" and not rospy.is_shutdown():
             if move == "left":
-                self.vel_pub.publish(self.get_descent(0, 0.5, 0.1))
-                if abs(self.curr_pose.pose.position.y - loc.y) > rect_y/3:
-                    self.pub.publish("SCAN COMPLETE")
+                self.vel_pub.publish(self.get_descent(0, 0.5, 0.1))#向左边移动
+                if abs(self.curr_pose.pose.position.y - loc.y) > rect_y/3:#如果超过了指定范围
+                    self.pub.publish("SCAN COMPLETE")#则扫描完成
             elif move == "right":
                 self.vel_pub.publish(self.get_descent(0, -0.5, 0.1))
                 if abs(self.curr_pose.pose.position.y  - loc.y) > rect_y/3:
@@ -290,15 +291,14 @@ class OffbPosCtl:
                 if abs(self.curr_pose.pose.position.x - loc.x) > offset_x:
                     self.pub.publish("SCAN COMPLETE")
             else:
-                print "move error"
-            print
-            print abs(self.curr_pose.pose.position.y - loc.y)
-            print abs(self.curr_pose.pose.position.x - loc.x)
+                print ("move error")
+            print (abs(self.curr_pose.pose.position.y - loc.y))
+            print (abs(self.curr_pose.pose.position.x - loc.x))
             rate.sleep()
 
-    def descent(self):
-        rate = rospy.Rate(10)
-        print self.mode
+    def descent(self):#降落模式，将模式设置为DESCENT
+        rate = rospy.Rate(10)#设置发布频率
+        print (self.mode)
         self.x_change = 1
         self.y_change = 1
         self.x_prev_error = 0
@@ -308,17 +308,17 @@ class OffbPosCtl:
         timeout = 30
 
         while self.mode == "DESCENT" and not rospy.is_shutdown():
-            err_x = 0 - self.tag_pt.x
-            err_y = 0 - self.tag_pt.y
+            err_x = 0 - self.tag_pt.x#计算x方向的误差
+            err_y = 0 - self.tag_pt.y#计算y方向的误差
 
-            self.x_change += err_x * self.KP  + (self.x_prev_error * self.KD) + (self.x_sum_error * self.KI)
-            self.y_change += err_y * self.KP  + (self.y_prev_error * self.KD) + (self.y_sum_error * self.KI)
+            self.x_change += err_x * self.KP  + (self.x_prev_error * self.KD) + (self.x_sum_error * self.KI)#计算x方向的控制量
+            self.y_change += err_y * self.KP  + (self.y_prev_error * self.KD) + (self.y_sum_error * self.KI)#计算y方向的控制量
 
-            self.x_change = max(min(0.4, self.x_change), -0.4)
-            self.y_change = max(min(0.4, self.y_change), -0.4)
+            self.x_change = max(min(0.4, self.x_change), -0.4)#限制x方向的控制量
+            self.y_change = max(min(0.4, self.y_change), -0.4)#限制y方向的控制量
 
             if err_x > 0 and err_y < 0:
-                des = self.get_descent(-1 * self.x_change, -1 * self.y_change, -0.08)
+                des = self.get_descent(-1 * self.x_change, -1 * self.y_change, -0.08)#速度指令发布
             elif err_x < 0 and err_y > 0:
                 des = self.get_descent(-1 * self.x_change, -1 * self.y_change, -0.08)
             else:
@@ -333,9 +333,9 @@ class OffbPosCtl:
             self.y_sum_error += err_y
 
 
-            if timeout == 0 and self.curr_pose.pose.position.z > 0.7:
+            if timeout == 0 and self.curr_pose.pose.position.z > 0.7:#超时强制下坠
                 timeout = 30
-                print timeout
+                print (timeout)
                 self.x_change = 0
                 self.y_change = 0
                 self.x_sum_error = 0
@@ -349,32 +349,31 @@ class OffbPosCtl:
                 self.pub.publish("PICKUP COMPLETE")
 
 
-    def rt_survey(self):
+    def rt_survey(self):#转场模式，将模式设置为RT_SURVEY
         location = [self.saved_location.pose.position.x,
                     self.saved_location.pose.position.y,
                     self.saved_location.pose.position.z,
-                    0, 0, 0, 0]
+                    0, 0, 0, 0]#设置转场的位置
         loc = [location,
                location,
                location,
                location,
-               location]
+               location]#设置转场的位置
 
-        rate = rospy.Rate(10)
+        rate = rospy.Rate(10)#设置发布频率
         rate.sleep()
         shape = len(loc)
         pose_pub = rospy.Publisher('/mavros/setpoint_position/local', PoseStamped, queue_size=10)
-        des_pose = self.copy_pose(self.curr_pose)
+        des_pose = self.copy_pose(self.curr_pose)#设置转场的位置
         waypoint_index = 0
         sim_ctr = 1
-        print self.mode
+        print (self.mode)
 
         while self.mode == "RT_SURVEY" and not rospy.is_shutdown():
             if waypoint_index == shape:
                 waypoint_index = 0
                 sim_ctr += 1
             if self.isReadyToFly:
-
                 des_x = loc[waypoint_index][0]
                 des_y = loc[waypoint_index][1]
                 des_z = loc[waypoint_index][2]
@@ -395,7 +394,7 @@ class OffbPosCtl:
                 if dist < self.distThreshold:
                     waypoint_index += 1
 
-            if sim_ctr == 5:
+            if sim_ctr == 5:#转场模式结束
                 self.pub.publish("RTS COMPLETE")
                 self.saved_location = None
 
@@ -406,71 +405,70 @@ class OffbPosCtl:
         while not rospy.is_shutdown():
 
             if self.mode == "SURVEY":
-                self.lawnmover(200, 20, 7, 10, 3)
+                self.lawnmover(200, 20, 7, 10, 3)#移动模式
 
             if self.mode == "HOVER":
-                self.hover()
+                self.hover()#悬停模式
 
             if self.mode == "SCAN":
-                self.scan(20, 3) # pass x_offset, length of rectangle, to bound during small search
-
+                self.scan(20, 3) # x_offset，和搜索矩形的长度
             if self.mode == "TEST":
-                print self.mode
+                print (self.mode)
                 self.vel_pub.publish(self.get_descent(0, 0.1, 0))
 
             if self.mode == "DESCENT":
-                self.descent()
+                self.descent()#下降模式
 
             if self.mode == "RT_SURVEY":
-                self.rt_survey()
+                self.rt_survey()#转场模式
 
     def planner(self, msg):
-        if msg.data == "FOUND UAV" and self.mode == "SURVEY":
+        if msg.data == "FOUND UAV" and self.mode == "SURVEY":#如果接收到消息，并且当前模式为移动模式
             self.saved_location = self.curr_pose
-            self.mode = "SCAN"
+            self.mode = "SCAN"#设置模式为搜索模式
 
-        if msg.data == "FOUND UAV" and self.mode == "SCAN":
+        if msg.data == "FOUND UAV" and self.mode == "SCAN":#如果接收到消息，并且当前模式为搜索模式
             self.detection_count += 1
-            print self.detection_count
+            print (self.detection_count)
             if self.detection_count > 25:
                 self.hover_loc = [self.curr_pose.pose.position.x,
                                   self.curr_pose.pose.position.y,
                                   self.curr_pose.pose.position.z,
                                   0, 0, 0, 0]
-                self.mode = "HOVER"
+                self.mode = "HOVER"#设置模式为悬停模式
                 self.detection_count = 0
 
-        if msg.data == "FOUND UAV" and self.mode == "HOVER":
-            print self.detection_count
-            self.detection_count += 1
+        if msg.data == "FOUND UAV" and self.mode == "HOVER":#如果接收到消息，并且当前模式为悬停模式
+            print (self.detection_count)
+            self.detection_count += 1#检测次数加1
             if self.detection_count > 40:
-                self.mode = "DESCENT"
+                self.mode = "DESCENT"#设置模式为下降模式
                 self.detection_count = 0
 
-        if msg.data == "MISSING UAV" and self.mode == "DESCENT":
+        if msg.data == "MISSING UAV" and self.mode == "DESCENT":#如果接收到消息，并且当前模式为下降模式
             self.missing_count += 1
-            if self.missing_count > 80:
-                self.mode = "HOVER"
+            if self.missing_count > 80:#如果没有接收到消息，并且检测次数大于80次
+                self.mode = "HOVER"#设置模式为悬停模式
                 self.missing_count = 0
 
-        if msg.data == "FOUND UAV" and self.mode == "DESCENT":
-            self.missing_count = 0
+        if msg.data == "FOUND UAV" and self.mode == "DESCENT":#如果接收到消息，并且当前模式为下降模式
+            self.missing_count = 0#检测次数清0,继续下降模式
 
-        if msg.data == "SCAN COMPLETE":
-            self.mode = "RT_SURVEY"
+        if msg.data == "SCAN COMPLETE":#如果接收到消息，并且当前模式为搜索结束
+            self.mode = "RT_SURVEY"#设置模式为转场模式
             self.detection_count = 0
 
-        if msg.data == "HOVER COMPLETE":
-            if self.waypointIndex == 0:  # TODO remove this, this keeps the drone in a loop of search
-                self.mode = "SURVEY"
+        if msg.data == "HOVER COMPLETE":#如果接收到消息，并且当前模式为悬停结束
+            if self.waypointIndex == 0:
+                self.mode = "SURVEY"#设置模式为移动模式
             else:
-                self.mode = "RT_SURVEY"
+                self.mode = "RT_SURVEY"#设置模式为转场模式
             self.detection_count = 0
 
-        if msg.data == "RTS COMPLETE":
+        if msg.data == "RTS COMPLETE":#如果接收到消息，并且当前模式为转场结束
             self.mode = "SURVEY"
 
-        if msg.data == "PICKUP COMPLETE":
+        if msg.data == "PICKUP COMPLETE":#如果接收到消息，并且当前模式为搜索结束
             # self.mode = "CONFIRM_PICKUP"
 
             # go back and hover at takeoff location
