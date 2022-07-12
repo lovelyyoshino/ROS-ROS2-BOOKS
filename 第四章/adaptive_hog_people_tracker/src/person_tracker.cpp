@@ -32,64 +32,55 @@
 
 const std::string windowTitle = "Person Tracker";
 
-//ROS Callback
-void imageCallback(const sensor_msgs::ImageConstPtr&);
+void imageCallback(const sensor_msgs::ImageConstPtr &); //图像回调函数
 
-//HOG model training function
-void hogTraining();
+void hogTraining(); // HOG模型训练函数
 
-//Computes the features of positive/negative image
-void computeFeatures(cv::Mat, cv::Rect);
-void computeFeatureVector(cv::Mat, int);
+// Computes the features of positive/negative image
+void computeFeatures(cv::Mat, cv::Rect); //计算特征函数
+void computeFeatureVector(cv::Mat, int); //计算特征向量函数
 
-void enlargeSearchRoi();
-void printFunction(std::string);
+void enlargeSearchRoi();		 //放大搜索区域函数
+void printFunction(std::string); //打印函数
 
-void showHelpMessage(std::string);
+void showHelpMessage(std::string); //显示帮助信息函数
 
-//HOGDescriptor for detection
-HOGDetector detectionHog;
+HOGDetector detectionHog; // HOG检测器
 
-//HOGDescriptor for training
-HOGDetector trainingHog;
+HOGDetector trainingHog; // HOG训练器
 
-//Current frame
-int frameNumber = 0;
+int frameNumber = 0; //当前帧数
 
-//Training flag
-bool isTraining = false;
+bool isTraining = false; //训练标志
 
-//Region of interest
-cv::Rect searchRoi(0, 0, frameSize.width, frameSize.height);
+cv::Rect searchRoi(0, 0, frameSize.width, frameSize.height); //搜索区域
 
-//Mutex variables to handle concurrency
-boost::mutex hogMutex;
-boost::mutex featuresMutex;
+boost::mutex hogMutex;		// HOG锁
+boost::mutex featuresMutex; //特征锁
 
-//SVM for learning
-LinearSVM svm;
+LinearSVM svm; //线性SVM模型
 
 ros::Publisher p;
 
 cv::Mat trainData, trainLabels;
 
-bool detected = false;
-bool print = true;
+bool detected = false; //检测标志
+bool print = true;	   //打印标志
 
-//Kalman filter
+// Kalman filter
 int stateSize = 6;
 int measSize = 4;
 int contrSize = 0;
-cv::KalmanFilter kf(stateSize, measSize, contrSize);
+cv::KalmanFilter kf(stateSize, measSize, contrSize); //卡尔曼滤波器
 
 cv::Mat state(stateSize, 1, CV_32F);
 cv::Mat meas(measSize, 1, CV_32F);
 
-double ticks = 0;
-int notFoundCount = 0;
+double ticks = 0;	   //时间计数
+int notFoundCount = 0; //未找到计数
 
-double searchRoiRatio;
-double detectionThreshold = MIN_THRESHOLD;
+double searchRoiRatio;					   //搜索区域比例
+double detectionThreshold = MIN_THRESHOLD; //检测阈值
 
 int main(int argc, char **argv)
 {
@@ -104,17 +95,17 @@ int main(int argc, char **argv)
 	ros::param::param<std::string>("~/detector", detector_type, "full");
 	ros::param::param<int>("~/verbosity_level", verbosity_level, 0);
 
-	image_transport::ImageTransport it(nh);
+	image_transport::ImageTransport it(nh); //初始化图像传输类
 
-	image_transport::Subscriber sub = it.subscribe(camera_t, 1, imageCallback);
+	image_transport::Subscriber sub = it.subscribe(camera_t, 1, imageCallback); //订阅图像信息
 
-	p = nh.advertise<adaptive_hog_people_tracker::BoundingBox>(bounding_box_t, 1);
+	p = nh.advertise<adaptive_hog_people_tracker::BoundingBox>(bounding_box_t, 1); //发布bounding_box信息
 
-	if(verbosity_level == 0)
+	if (verbosity_level == 0)
 	{
 		print = false;
 	}
-	else if(verbosity_level == 1)
+	else if (verbosity_level == 1)
 	{
 		print = true;
 	}
@@ -124,26 +115,26 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	if(detector_type == "full")
+	if (detector_type == "full") //如果检测器类型为full
 	{
-		detectionHog = HOGDetector(HOGDetector::FULL);
-		trainingHog = HOGDetector(HOGDetector::FULL);
+		detectionHog = HOGDetector(HOGDetector::FULL); //初始化HOG检测器
+		trainingHog = HOGDetector(HOGDetector::FULL);  //初始化HOG训练器
 	}
-	else if(detector_type == "torso")
+	else if (detector_type == "torso")
 	{
-		detectionHog = HOGDetector(HOGDetector::TORSO);
-		trainingHog = HOGDetector(HOGDetector::TORSO);
+		detectionHog = HOGDetector(HOGDetector::TORSO); //初始化HOG检测器
+		trainingHog = HOGDetector(HOGDetector::TORSO);	//初始化HOG训练器
 	}
 
-	searchRoiRatio = detectionHog.getSearchRoiRatio();
+	searchRoiRatio = detectionHog.getSearchRoiRatio(); //获取搜索区域比例
 
-    cv::startWindowThread();
+	cv::startWindowThread(); //初始化窗口线程
 
-	cv::namedWindow(windowTitle);
+	cv::namedWindow(windowTitle); //初始化窗口
 
-    cv::setIdentity(kf.transitionMatrix);
+	cv::setIdentity(kf.transitionMatrix); //初始化卡尔曼滤波器矩阵
 
-	kf.errorCovPre.at<float>(0) = 1;
+	kf.errorCovPre.at<float>(0) = 1; //初始化卡尔曼滤波器误差矩阵
 	kf.errorCovPre.at<float>(7) = 1;
 	kf.errorCovPre.at<float>(14) = 1;
 	kf.errorCovPre.at<float>(21) = 1;
@@ -151,26 +142,26 @@ int main(int argc, char **argv)
 	kf.errorCovPre.at<float>(35) = 1;
 
 	kf.measurementMatrix = cv::Mat::zeros(measSize, stateSize, CV_32F);
-	kf.measurementMatrix.at<float>(0) = 1.0f;
+	kf.measurementMatrix.at<float>(0) = 1.0f; //初始化卡尔曼滤波器测量矩阵
 	kf.measurementMatrix.at<float>(7) = 1.0f;
 	kf.measurementMatrix.at<float>(16) = 1.0f;
 	kf.measurementMatrix.at<float>(23) = 1.0f;
 
-	kf.processNoiseCov.at<float>(0) = 1e-2;
+	kf.processNoiseCov.at<float>(0) = 1e-2; //初始化卡尔曼滤波器过程噪声矩阵
 	kf.processNoiseCov.at<float>(7) = 1e-4;
 	kf.processNoiseCov.at<float>(14) = 1e-3;
 	kf.processNoiseCov.at<float>(21) = 1e-10;
 	kf.processNoiseCov.at<float>(28) = 1e-4;
 	kf.processNoiseCov.at<float>(35) = 1e-4;
 
-	state.at<float>(0) = frameSize.width / 2;
+	state.at<float>(0) = frameSize.width / 2; //初始化卡尔曼滤波器状态向量
 	state.at<float>(1) = frameSize.height / 2;
 
-	cv::setIdentity(kf.measurementNoiseCov, cv::Scalar(1e-2));
+	cv::setIdentity(kf.measurementNoiseCov, cv::Scalar(1e-2)); //将矩阵中对角线上的元素设为1e-2
 
-	while(ros::ok())
+	while (ros::ok())
 	{
-		if(!cvGetWindowHandle(windowTitle.c_str()))
+		if (!cvGetWindowHandle(windowTitle.c_str()))
 		{
 			break;
 		}
@@ -182,49 +173,46 @@ int main(int argc, char **argv)
 	ros::shutdown();
 }
 
-void imageCallback(const sensor_msgs::ImageConstPtr& msg)
+void imageCallback(const sensor_msgs::ImageConstPtr &msg)
 {
 	cv::Mat image;
 
 	try
 	{
-		image = cv_bridge::toCvShare(msg, "bgr8")->image;
-
+		image = cv_bridge::toCvShare(msg, "bgr8")->image; //将图像转换为OpenCV格式
 		if (image.empty())
 		{
 			return;
 		}
 	}
-	catch (cv_bridge::Exception& e)
+	catch (cv_bridge::Exception &e)
 	{
-		//Conversion failed
-		ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
-
+		// Conversion failed
+		ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str()); //转换失败
 		return;
 	}
 
-	cv::resize(image, image, frameSize);
+	cv::resize(image, image, frameSize); //将图像缩放到指定大小
 
-	double precTick = ticks;
+	double precTick = ticks; //上一时刻赋值
 
-	ticks = (double) cv::getTickCount();
+	ticks = (double)cv::getTickCount(); //获取当前时间
 
-	double dT = (ticks - precTick) / cv::getTickFrequency();
+	double dT = (ticks - precTick) / cv::getTickFrequency(); //计算时间差
 
-	// temp image for drawing
-	cv::Mat temp(image.size(), CV_8UC3);
-	temp.setTo(cv::Scalar::all(0));
+	cv::Mat temp(image.size(), CV_8UC3); //初始化临时图像
+	temp.setTo(cv::Scalar::all(0));		 //将临时图像设置为黑色
 
-	adaptive_hog_people_tracker::BoundingBox par;
+	adaptive_hog_people_tracker::BoundingBox par; //初始化boundingBox结构体
 
-	if(detected)
+	if (detected)
 	{
 		// >>>> Matrix A
 		kf.transitionMatrix.at<float>(2) = dT;
 		kf.transitionMatrix.at<float>(9) = dT;
 		// <<<< Matrix A
 
-		state = kf.predict();
+		state = kf.predict(); //预测状态向量
 
 		cv::Rect predRect;
 		predRect.width = state.at<float>(4);
@@ -232,24 +220,24 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 		predRect.x = state.at<float>(0) - predRect.width / 2;
 		predRect.y = state.at<float>(1) - predRect.height / 2;
 
-		searchRoi.width = predRect.width * searchRoiRatio;
+		searchRoi.width = predRect.width * searchRoiRatio; //计算搜索区域宽度
 		searchRoi.height = predRect.height + (searchRoi.width - predRect.width);
 		searchRoi.x = predRect.x - ((searchRoi.width - predRect.width) / 2);
 		searchRoi.y = predRect.y - ((searchRoi.width - predRect.width) / 2);
 
-		if(searchRoi.x < 0)
+		if (searchRoi.x < 0)
 		{
 			searchRoi.x = 0;
 		}
-		if(searchRoi.y < 0)
+		if (searchRoi.y < 0)
 		{
 			searchRoi.y = 0;
 		}
-		if(searchRoi.br().x > frameSize.width)
+		if (searchRoi.br().x > frameSize.width)
 		{
 			searchRoi.width -= searchRoi.br().x - frameSize.width;
 		}
-		if(searchRoi.br().y > frameSize.height)
+		if (searchRoi.br().y > frameSize.height)
 		{
 			searchRoi.height -= searchRoi.br().y - frameSize.height;
 		}
@@ -258,13 +246,13 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 		center.x = state.at<float>(0);
 		center.y = state.at<float>(1);
 
-		par.x = center.x;
+		par.x = center.x; //设置boundingBox结构体的x坐标
 		par.y = center.y;
-		par.width = predRect.width;
+		par.width = predRect.width; //设置boundingBox结构体的宽度
 		par.height = predRect.height;
 
-		cv::rectangle(temp, predRect, cv::Scalar(0, 0, 255), 2);
-		cv::circle(temp, center, 1, cv::Scalar(0, 0, 255), 2);
+		cv::rectangle(temp, predRect, cv::Scalar(0, 0, 255), 2); //画出预测矩形
+		cv::circle(temp, center, 1, cv::Scalar(0, 0, 255), 2);	 //画出预测中心点
 	}
 	else
 	{
@@ -281,106 +269,106 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 	std::vector<cv::Rect> found;
 	std::vector<double> confidence;
 
-	if(frameNumber > 10)
+	if (frameNumber > 10) //如果帧数大于10，则开始检测,防止开始的黑屏
 	{
 		hogMutex.lock();
-		detectionHog.detectMultiScale(image(searchRoi), found, confidence, detectionThreshold, cv::Size(), cv::Size(), 1.05, 1, false);
+		detectionHog.detectMultiScale(image(searchRoi), found, confidence, detectionThreshold, cv::Size(), cv::Size(), 1.05, 1, false); //检测行人
 		hogMutex.unlock();
 	}
 
 	cv::Rect currArea;
 	cv::Point currDetection;
 
-	double distance = cv::norm(cv::Point(0, 0) - cv::Point(frameSize.width, frameSize.height));
+	double distance = cv::norm(cv::Point(0, 0) - cv::Point(frameSize.width, frameSize.height)); //计算两点之间的距离
 
-	for(int i = 0; i < found.size(); i++)
+	for (int i = 0; i < found.size(); i++) //遍历所有检测到的人
 	{
-		cv::Rect r = found[i];
+		cv::Rect r = found[i]; //获取检测到的人的矩形框
 
 		int j;
 
-		for(j = 0; j < found.size(); j++)
+		for (j = 0; j < found.size(); j++)
 		{
-			if(j != i && (r & found[j]) == r)
+			if (j != i && (r & found[j]) == r) //如果检测到的人的矩形框与其他人的矩形框有重叠，则跳出循环
 			{
 				break;
 			}
 		}
 
-		if(j == found.size())
+		if (j == found.size()) //如果检测到的人的矩形框与其他人的矩形框没有重叠，则认为是一个独立的人
 		{
 			//----da roi a immagine----
-			r.x += searchRoi.x;
+			r.x += searchRoi.x; //将矩形框的x坐标加上搜索区域的x坐标
 			r.y += searchRoi.y;
 
-			if(r.x < 0)
+			if (r.x < 0) //如果矩形框的x坐标小于0，则将其设置为0
 			{
 				r.x = 0;
 			}
-			if(r.y < 0)
+			if (r.y < 0) //如果矩形框的y坐标小于0，则将其设置为0
 			{
 				r.y = 0;
 			}
-			if(r.br().x > frameSize.width)
+			if (r.br().x > frameSize.width) //如果矩形框的右下角x坐标大于图像的宽度，则将其设置为图像的宽度
 			{
 				r.width -= r.br().x - frameSize.width;
 			}
-			if(r.br().y > frameSize.height)
+			if (r.br().y > frameSize.height) //如果矩形框的右下角y坐标大于图像的高度，则将其设置为图像的高度
 			{
 				r.height -= r.br().y - frameSize.height;
 			}
 
 			cv::Point r_center;
 
-			r_center.x = r.x + r.width / 2;
-			r_center.y = r.y + r.height / 2;
+			r_center.x = r.x + r.width / 2;	 //计算矩形框的中心点x坐标
+			r_center.y = r.y + r.height / 2; //计算矩形框的中心点y坐标
 
 			cv::rectangle(temp, r, cv::Scalar(255, 0, 0), 2);
 
-			if(cv::norm(r_center - cv::Point(state.at<float>(0), state.at<float>(1))) < distance)
+			if (cv::norm(r_center - cv::Point(state.at<float>(0), state.at<float>(1))) < distance) //如果检测到的矩形中心点与预测的中心点距离小于预测的宽度，则认为是同一个人
 			{
-				distance = cv::norm(r_center - cv::Point(state.at<float>(0), state.at<float>(1)));
-				currDetection = cv::Point(r_center);
-				currArea = cv::Rect(r);
+				distance = cv::norm(r_center - cv::Point(state.at<float>(0), state.at<float>(1))); //更新距离
+				currDetection = cv::Point(r_center);											   //更新检测到的中心点
+				currArea = cv::Rect(r);															   //更新检测到的矩形
 
-				foundAtLeastOne = true;
+				foundAtLeastOne = true; //设置为true，表示检测到了人
 
-				detectionThreshold = confidence[i] * 0.6;
+				detectionThreshold = confidence[i] * 0.6; //更新检测阈值
 			}
 		}
 	}
 
-	if(foundAtLeastOne)
+	if (foundAtLeastOne) //如果检测到了人
 	{
 		//-------Collecting Samples--------
-		if(frameNumber % SKIP_ADD_SAMPLES == 0)
+		if (frameNumber % SKIP_ADD_SAMPLES == 0)
 		{
-			if(currArea.width > detectionHog.winSize.width / 2 && currArea.height > detectionHog.winSize.height / 2)
+			if (currArea.width > detectionHog.winSize.width / 2 && currArea.height > detectionHog.winSize.height / 2)
 			{
 				boost::thread t(computeFeatures, image, currArea);
 				t.detach();
 
 				//----Automatic Start Training
-				if(trainData.rows >= MIN_TRAIN && !isTraining)
+				if (trainData.rows >= MIN_TRAIN && !isTraining)
 				{
-					boost::thread t(hogTraining);
+					boost::thread t(hogTraining); //开启线程
 					t.detach();
 				}
 			}
 		}
 
-		notFoundCount = 0;
+		notFoundCount = 0; //如果检测到了人，则将没有检测到人的计数器置0
 
-		meas.at<float>(0) = currDetection.x;
+		meas.at<float>(0) = currDetection.x; //更新状态量
 		meas.at<float>(1) = currDetection.y;
 		meas.at<float>(2) = (float)currArea.width;
 		meas.at<float>(3) = (float)currArea.height;
 
-		if(!detected)
+		if (!detected)
 		{
-			detected = true;
+			detected = true; //如果没有检测到人，则设置为true
 
-			state.at<float>(0) = currDetection.x;
+			state.at<float>(0) = currDetection.x; //更新状态量
 			state.at<float>(1) = currDetection.y;
 			state.at<float>(2) = 0;
 			state.at<float>(3) = 0;
@@ -396,12 +384,12 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 	}
 	else
 	{
-		notFoundCount++;
+		notFoundCount++; //如果没有检测到人，则计数器加1
 
-		detectionThreshold -= notFoundCount * 0.01;
-		enlargeSearchRoi();
+		detectionThreshold -= notFoundCount * 0.01; //更新检测阈值
+		enlargeSearchRoi();							//更新搜索区域
 
-		if(notFoundCount >= 30)
+		if (notFoundCount >= 30) //如果没有检测到人30帧，则重置状态量
 		{
 			detected = false;
 
@@ -414,15 +402,15 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 		}
 	}
 
-	cv::rectangle(temp, searchRoi, cv::Scalar(0, 255, 0));
-	cv::scaleAdd(temp, 0.95, image, image);
+	cv::rectangle(temp, searchRoi, cv::Scalar(0, 255, 0)); //画出搜索区域
+	cv::scaleAdd(temp, 0.95, image, image);				   //将搜索区域画到图像上
 
 	frameNumber++;
 
 	detectionThreshold = std::min(detectionThreshold, MAX_THRESHOLD);
 	detectionThreshold = std::max(detectionThreshold, MIN_THRESHOLD);
 
-	if(cvGetWindowHandle(windowTitle.c_str()))
+	if (cvGetWindowHandle(windowTitle.c_str()))
 	{
 		cv::imshow(windowTitle, image);
 	}
@@ -432,145 +420,145 @@ void imageCallback(const sensor_msgs::ImageConstPtr& msg)
 
 //------------hog-training---------------------------------------
 
-void hogTraining()
+void hogTraining() //训练HOG模型
 {
-	isTraining = true;
+	isTraining = true; //设置为true，表示正在训练
 
-	double t = (double)cv::getTickCount();
+	double t = (double)cv::getTickCount(); //获取时钟数
 
 	std::vector<float> model;
 
 	featuresMutex.lock();
-	cv::Mat data = trainData.clone();
-	cv::Mat labels = trainLabels.clone();
+	cv::Mat data = trainData.clone();	  //复制训练数据
+	cv::Mat labels = trainLabels.clone(); //复制训练标签
 	featuresMutex.unlock();
 
-	model = svm.trainModel(data, labels, detectionHog.getDefaultModel());
+	model = svm.trainModel(data, labels, detectionHog.getDefaultModel()); //训练模型
 
-	hogMutex.lock();
-	detectionHog.setSVMDetector(model);
+	hogMutex.lock();					//锁定HOG模型
+	detectionHog.setSVMDetector(model); //设置模型
 	hogMutex.unlock();
 
 	t -= (double)cv::getTickCount();
 
 	printFunction("Training time = " + boost::to_string(-(t * 1000 / cv::getTickFrequency())) + "ms.");
 
-	isTraining = false;
+	isTraining = false; //设置为false，表示训练完成
 }
 
-void computeFeatures(cv::Mat image, cv::Rect selection)
+void computeFeatures(cv::Mat image, cv::Rect selection) //提取特征
 {
 	try
 	{
-		cv::Mat resized(trainingHog.winSize, CV_8UC3);
+		cv::Mat resized(trainingHog.winSize, CV_8UC3); //创建缩放图像
 
-		resize(image(selection), resized, trainingHog.winSize, cv::INTER_CUBIC);
+		resize(image(selection), resized, trainingHog.winSize, cv::INTER_CUBIC); //缩放图像
 
 		cv::Rect roi1(0, 0, selection.x, image.rows);
 		cv::Rect roi2(selection.br().x, 0, image.cols - selection.br().x, image.rows);
 
 		featuresMutex.lock();
 
-		computeFeatureVector(resized, POSITIVE);
+		computeFeatureVector(resized, POSITIVE); //提取正样本特征
 
-		if(roi1.width > trainingHog.winSize.width)
+		if (roi1.width > trainingHog.winSize.width) //如果左边区域宽度大于窗口宽度，则提取特征
 		{
-			computeFeatureVector(image(roi1), NEGATIVE);
+			computeFeatureVector(image(roi1), NEGATIVE); //提取负样本特征
 		}
 
-		if(roi2.width > trainingHog.winSize.width)
+		if (roi2.width > trainingHog.winSize.width) //如果右边区域宽度大于窗口宽度，则提取特征
 		{
-			computeFeatureVector(image(roi2), NEGATIVE);
+			computeFeatureVector(image(roi2), NEGATIVE); //提取负样本特征
 		}
 
-		if(trainData.rows > MAX_TRAIN)
+		if (trainData.rows > MAX_TRAIN) //训练数据
 		{
-			trainData = trainData.rowRange(trainData.rows - MAX_TRAIN, trainData.rows).clone();
-			trainLabels = trainLabels.rowRange(trainLabels.rows - MAX_TRAIN, trainLabels.rows).clone();
+			trainData = trainData.rowRange(trainData.rows - MAX_TRAIN, trainData.rows).clone();			//训练数据
+			trainLabels = trainLabels.rowRange(trainLabels.rows - MAX_TRAIN, trainLabels.rows).clone(); //训练标签
 		}
 
 		featuresMutex.unlock();
 	}
-	catch(ros::Exception& e)
+	catch (ros::Exception &e)
 	{
 		ROS_ERROR("%s\n", e.what());
 	}
-	catch (std::exception& e)
+	catch (std::exception &e)
 	{
 		ROS_ERROR("%s\n", e.what());
 	}
 }
 
-void computeFeatureVector(cv::Mat image, int label)
+void computeFeatureVector(cv::Mat image, int label) //提取特征
 {
-	if(label == POSITIVE)
+	if (label == POSITIVE)
 	{
-		cv::Mat scale =  image(cv::Rect(image.cols / 2 - trainingHog.winSize.width / 2, image.rows / 2 - trainingHog.winSize.height / 2, trainingHog.winSize.width, trainingHog.winSize.height)).clone();
+		//提取正样本特征
+		cv::Mat scale = image(cv::Rect(image.cols / 2 - trainingHog.winSize.width / 2, image.rows / 2 - trainingHog.winSize.height / 2, trainingHog.winSize.width, trainingHog.winSize.height)).clone();
 
-		std::vector<float> desc;
+		std::vector<float> desc; //特征向量
 
-		//compute feature vector
-		trainingHog.compute(scale, desc);
+		trainingHog.compute(scale, desc); //计算特征向量
 
 		cv::Mat data(1, desc.size(), CV_32FC1, desc.data());
 
-		trainData.push_back(data);
+		trainData.push_back(data); //训练数据
 
-		trainLabels.push_back(POSITIVE);
+		trainLabels.push_back(POSITIVE); //训练标签
 	}
-	else if(label == NEGATIVE)
+	else if (label == NEGATIVE)
 	{
-		srand(time(NULL));
+		srand(time(NULL)); //随机数种子
 
-		//take 10 random windows of each negative image
-		for(int j = 0; j < 10; j++)
+		// take 10 random windows of each negative image
+		for (int j = 0; j < 10; j++)
 		{
 			try
 			{
 				cv::Point pt;
 				cv::Size sc;
 
-				//random width and height
-				sc.height = rand() % (image.rows - trainingHog.winSize.height) + trainingHog.winSize.height - 1;
+				// random width and height
+				sc.height = rand() % (image.rows - trainingHog.winSize.height) + trainingHog.winSize.height - 1; //随机高度
 
-				sc.width = cvRound((double)sc.height / (double)trainingHog.winSize.height * (double)trainingHog.winSize.width);
+				sc.width = cvRound((double)sc.height / (double)trainingHog.winSize.height * (double)trainingHog.winSize.width); //随机宽度
 
-				if(sc.width > image.cols)
+				if (sc.width > image.cols)
 				{
 					sc.width = image.cols;
-					sc.height = cvRound((double)sc.width / (double)trainingHog.winSize.width * (double)trainingHog.winSize.height);
+					sc.height = cvRound((double)sc.width / (double)trainingHog.winSize.width * (double)trainingHog.winSize.height); //随机高度
 				}
 
-				//random top-left point
-				pt.x = rand() % (image.cols - sc.width + 1) - 1;
+				// random top-left point
+				pt.x = rand() % (image.cols - sc.width + 1) - 1; //随机x坐标
 
-				if(pt.x < 0)
+				if (pt.x < 0)
 				{
 					pt.x = 0;
 				}
 
 				pt.y = rand() % (image.rows - sc.height + 1) - 1;
 
-				if(pt.y < 0)
+				if (pt.y < 0)
 				{
 					pt.y = 0;
 				}
 
 				cv::Mat scale;
 
-				resize(image(cv::Rect(pt, sc)), scale, trainingHog.winSize);
+				resize(image(cv::Rect(pt, sc)), scale, trainingHog.winSize); //缩放图像
 
 				std::vector<float> desc;
 
-				trainingHog.compute(scale, desc);
+				trainingHog.compute(scale, desc); //计算特征向量
 
-				cv::Mat data(1, desc.size(), CV_32FC1, desc.data());
+				cv::Mat data(1, desc.size(), CV_32FC1, desc.data()); //训练数据
 
-				trainData.push_back(data);
+				trainData.push_back(data); //训练数据
 
-				trainLabels.push_back(NEGATIVE);
+				trainLabels.push_back(NEGATIVE); //训练标签
 			}
-			catch(std::exception& e)
+			catch (std::exception &e)
 			{
 				ROS_ERROR("%s\n", e.what());
 			}
@@ -580,24 +568,24 @@ void computeFeatureVector(cv::Mat image, int label)
 
 void enlargeSearchRoi()
 {
-	searchRoi.width += 6 * notFoundCount;
+	searchRoi.width += 6 * notFoundCount; //搜索区域宽度
 	searchRoi.height += 6 * notFoundCount;
-	searchRoi.x -= 3 * notFoundCount;
+	searchRoi.x -= 3 * notFoundCount; //搜索区域x坐标
 	searchRoi.y -= 3 * notFoundCount;
 
-	if(searchRoi.x < 0)
+	if (searchRoi.x < 0) //搜索区域x坐标
 	{
 		searchRoi.x = 0;
 	}
-	if(searchRoi.y < 0)
+	if (searchRoi.y < 0) //搜索区域y坐标
 	{
 		searchRoi.y = 0;
 	}
-	if(searchRoi.br().x > frameSize.width)
+	if (searchRoi.br().x > frameSize.width) //搜索区域右边界x坐标
 	{
 		searchRoi.width -= searchRoi.br().x - frameSize.width;
 	}
-	if(searchRoi.br().y > frameSize.height)
+	if (searchRoi.br().y > frameSize.height) //搜索区域右边界y坐标
 	{
 		searchRoi.height -= searchRoi.br().y - frameSize.height;
 	}
@@ -605,7 +593,7 @@ void enlargeSearchRoi()
 
 void printFunction(std::string message)
 {
-	if(print)
+	if (print)
 	{
 		ROS_INFO(message.c_str());
 	}

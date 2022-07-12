@@ -1,28 +1,28 @@
 #include "HOGDetector.hpp"
 
-HOGDetector::HOGDetector(){}
+HOGDetector::HOGDetector() {}
 
-HOGDetector::HOGDetector(DetectorType type)
+HOGDetector::HOGDetector(DetectorType type) // HOG识别的构造函数
 {
 	blockSize = cv::Size(16, 16);
 	blockStride = cv::Size(8, 8);
 	cellSize = cv::Size(8, 8);
 	nbins = 9;
-	derivAperture = 1;
-	winSigma = -1;
-	histogramNormType = HOGDescriptor::L2Hys;
-	L2HysThreshold = 0.2;
-	gammaCorrection = true;
-	nlevels = 20;
+	derivAperture = 1;						  //梯度求导的窗口大小
+	winSigma = -1;							  //高斯窗的标准差，如果为-1，则使用默认值0.2
+	histogramNormType = HOGDescriptor::L2Hys; // L2Hys
+	L2HysThreshold = 0.2;					  // L2Hys
+	gammaCorrection = true;					  //是否使用伽马校正
+	nlevels = 20;							  //每个层的梯度图的级数
 
-	switch(type)
+	switch (type)
 	{
-		case TORSO:
-		{
-			winSize = cv::Size(48, 64);
-			searchRoiRatio = 2;
+	case TORSO: // HOG识别的类型，躯干
+	{
+		winSize = cv::Size(48, 64); // HOG识别的窗口大小
+		searchRoiRatio = 2;			// HOG识别的搜索区域的比例
 
-			float model[] =
+		float model[] =
 			{
 				-0.0331521,
 				-0.401166,
@@ -1284,31 +1284,30 @@ HOGDetector::HOGDetector(DetectorType type)
 				-0.0335874,
 				-0.502323,
 				-0.264682,
-				-5.05549
-			};
+				-5.05549};
 
-			defaultModel.assign(model, model + sizeof(model) / sizeof(float));
+		defaultModel.assign(model, model + sizeof(model) / sizeof(float)); //默认模型
 
-			break;
-		}
-		case FULL:
-		{
-			winSize = cv::Size(64, 128);
-			searchRoiRatio = 1.4;
-			defaultModel = cv::HOGDescriptor::getDefaultPeopleDetector();
-			break;
-		}
+		break;
+	}
+	case FULL: //全身识别
+	{
+		winSize = cv::Size(64, 128);								  //设置窗口大小
+		searchRoiRatio = 1.4;										  //搜索区域的比例
+		defaultModel = cv::HOGDescriptor::getDefaultPeopleDetector(); //默认模型
+		break;
+	}
 	}
 
 	svmDetector = defaultModel;
 }
 
-std::vector<float> HOGDetector::getDefaultModel()
+std::vector<float> HOGDetector::getDefaultModel() //获取默认模型
 {
 	return defaultModel;
 }
 
-double HOGDetector::getSearchRoiRatio()
+double HOGDetector::getSearchRoiRatio() //获取搜索区域的比例
 {
 	return searchRoiRatio;
 }
