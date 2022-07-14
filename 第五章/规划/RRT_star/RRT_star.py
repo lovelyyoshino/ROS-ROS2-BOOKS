@@ -43,7 +43,7 @@ class RRTStar(RRT):  # 这里作为子类继承了RRT类
                  goal_sample_rate=20,
                  max_iter=300,
                  connect_circle_dist=50.0,
-                 search_until_max_iter=True):
+                 search_until_max_iter=False):
         """
         设置参数
         启动:启动位置(x, y)
@@ -254,9 +254,10 @@ def main():
         # Draw final path
         if show_animation:
             rrt_star.draw_graph()
-            plt.plot([x for (x, y) in path], [y for (x, y) in path], 'r--')
+            plt.plot([x for (x, y) in path], [y for (x, y) in path], '-r')
             plt.grid(True)
-    plt.show()
+            plt.pause(0.01)  # Need for Mac
+            plt.show()
 
 
 if __name__ == '__main__':
