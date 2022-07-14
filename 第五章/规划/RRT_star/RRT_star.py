@@ -43,7 +43,7 @@ class RRTStar(RRT):  # 这里作为子类继承了RRT类
                  goal_sample_rate=20,
                  max_iter=300,
                  connect_circle_dist=50.0,
-                 search_until_max_iter=False):
+                 search_until_max_iter=True):
         """
         设置参数
         启动:启动位置(x, y)
@@ -55,7 +55,7 @@ class RRTStar(RRT):  # 这里作为子类继承了RRT类
                          path_resolution, goal_sample_rate, max_iter)
         self.connect_circle_dist = connect_circle_dist  # 链接圆距离
         self.goal_node = self.Node(goal[0], goal[1])  # 目标节点
-        self.search_until_max_iter = search_until_max_iter  # 一直搜索知道最大
+        self.search_until_max_iter = search_until_max_iter  # 一直搜索直到最大
 
     def planning(self, animation=True):
         """
