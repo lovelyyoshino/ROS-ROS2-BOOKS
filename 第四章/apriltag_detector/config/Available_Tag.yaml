@@ -1,3 +1,0 @@
-BaseFrame: base_footprint # base link node
-Tag: ["tag_0","tag_1","tag_2","tag_3"]
-WorkerThread: 5

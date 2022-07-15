@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<launch>
+
+  <node name="motion_decoder" pkg="motion_decoder" type="motion_decoder" output="screen">
+  </node>
+
+  <include file="$(find motion_decoder)/launch/apriltags_ros.launch"/>
+  <!-- include file="$(find motion_decoder)/launch/hector_trajectory_server.launch"/ -->
+
+  <node pkg="rosbag" type="play" name="player" args="--clock $(find motion_decoder)/bags/AprilTag_Moving.bag"/>
+</launch>
