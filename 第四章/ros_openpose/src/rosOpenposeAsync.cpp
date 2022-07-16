@@ -1,13 +1,13 @@
 /**
-* rosOpenpose.cpp: the main file. it consists of two workers input and output worker.
-*                  the job of the input worker is to provide color images to openpose wrapper.
-*                  the job of the output worker is to receive the keypoints detected in 2D
-*                  space. it then converts 2D pixels to 3D coordinates (wrt camera coordinate
-*                  system)/
-* Author: Ravi Joshi
-* Date: 2019/09/27
-* src: https://github.com/CMU-Perceptual-Computing-Lab/openpose/tree/master/examples/tutorial_api_cpp
-*/
+ * rosOpenpose.cpp: the main file. it consists of two workers input and output worker.
+ *                  the job of the input worker is to provide color images to openpose wrapper.
+ *                  the job of the output worker is to receive the keypoints detected in 2D
+ *                  space. it then converts 2D pixels to 3D coordinates (wrt camera coordinate
+ *                  system)/
+ * Author: Ravi Joshi
+ * Date: 2019/09/27
+ * src: https://github.com/CMU-Perceptual-Computing-Lab/openpose/tree/master/examples/tutorial_api_cpp
+ */
 
 // todo: merge the 'for' loop for body and hand keypoints into one
 
@@ -21,7 +21,8 @@
 
 // define a macro for compatibility with older versions
 #define OPENPOSE1POINT6_OR_HIGHER OpenPose_VERSION_MAJOR >= 1 && OpenPose_VERSION_MINOR >= 6
-#define OPENPOSE1POINT7POINT1_OR_HIGHER OpenPose_VERSION_MAJOR >= 1 && OpenPose_VERSION_MINOR >= 7 && OpenPose_VERSION_PATCH >=1
+#define OPENPOSE1POINT7POINT1_OR_HIGHER                                                                                \
+  OpenPose_VERSION_MAJOR >= 1 && OpenPose_VERSION_MINOR >= 7 && OpenPose_VERSION_PATCH >= 1
 
 // define sleep for input and output worker in milliseconds
 const int SLEEP_MS = 10;

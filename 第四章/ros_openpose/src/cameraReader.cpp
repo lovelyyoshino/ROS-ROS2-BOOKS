@@ -1,11 +1,11 @@
 /**
-* cameraReader.cpp: class file for CameraReader. the CameraReader file provides
-*                   functionality for retrieving color and depth images from a
-*                   camera. it also reads the camera calibration parameters
-*                   via ROS subscriber.
-* Author: Ravi Joshi
-* Date: 2019/02/01
-*/
+ * cameraReader.cpp: class file for CameraReader. the CameraReader file provides
+ *                   functionality for retrieving color and depth images from a
+ *                   camera. it also reads the camera calibration parameters
+ *                   via ROS subscriber.
+ * Author: Ravi Joshi
+ * Date: 2019/02/01
+ */
 
 #include <ros_openpose/cameraReader.hpp>
 
@@ -84,7 +84,7 @@ namespace ros_openpose
         // src: https://docs.opencv.org/master/d3/d63/classcv_1_1Mat.html#adf88c60c5b4980e05bb556080916978b
         depthPtr->image.convertTo(mDepthImage, -1, 0.001f);
       else
-        mDepthImage = depthPtr->image; // no conversion needed
+        mDepthImage = depthPtr->image;  // no conversion needed
     }
     catch (cv_bridge::Exception& e)
     {
@@ -104,4 +104,4 @@ namespace ros_openpose
     if (mSPtrCameraInfo != nullptr)
       mCamInfoSubscriber.shutdown();
   }
-}
+}  // namespace ros_openpose
