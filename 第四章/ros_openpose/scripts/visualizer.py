@@ -31,7 +31,7 @@ class RealtimeVisualization():
                        ColorRGBA(0.92, 0.73, 0.14, 1.00),
                        ColorRGBA(0.00, 0.61, 0.88, 1.00),
                        ColorRGBA(1.00, 0.65, 0.60, 1.00),
-                       ColorRGBA(0.59, 0.00, 0.56, 1.00)]
+                       ColorRGBA(0.59, 0.00, 0.56, 1.00)]# 设置不同的颜色用于骨骼点显示
 
         '''
         The skeleton is considered as a combination of line strips.
@@ -64,24 +64,24 @@ class RealtimeVisualization():
         We are using 5 LINE_STRIP to draw a hand
         '''
 
-        self.upper_body_ids = [0, 1, 8]
-        self.hands_ids = [4, 3, 2, 1, 5, 6, 7]
-        self.legs_ids = [22, 11, 10, 9, 8, 12, 13, 14, 19]
-        self.body_parts = [self.upper_body_ids, self.hands_ids, self.legs_ids]
+        self.upper_body_ids = [0, 1, 8]# 设置身体的骨骼点索引
+        self.hands_ids = [4, 3, 2, 1, 5, 6, 7]# 设置手的骨骼点索引
+        self.legs_ids = [22, 11, 10, 9, 8, 12, 13, 14, 19]# 设置腿的骨骼点索引
+        self.body_parts = [self.upper_body_ids, self.hands_ids, self.legs_ids]# 设置整个身体的骨骼点索引
 
         # number of fingers in a hand
-        self.fingers = 5
+        self.fingers = 5# 设置手的骨骼点个数
 
         # number of keypoints to denote a finger
-        self.count_keypoints_one_finger = 5
+        self.count_keypoints_one_finger = 5# 设置手指的骨骼点个数
 
-        self.total_finger_kepoints = self.fingers * self.count_keypoints_one_finger
+        self.total_finger_kepoints = self.fingers * self.count_keypoints_one_finger# 设置整个手的骨骼点个数
 
         # write person id on the top of his head
-        self.nose_id = 0
+        self.nose_id = 0# 设置鼻子的骨骼点索引
 
         # define a publisher to publish the 3D skeleton of multiple people
-        self.skeleton_pub = rospy.Publisher(self.ns, MarkerArray, queue_size=1)
+        self.skeleton_pub = rospy.Publisher(self.ns, MarkerArray, queue_size=1)# 定义一个发布器，用于发布骨骼点的信息
 
         # define a subscriber to retrive tracked bodies
         rospy.Subscriber(frame_topic, Frame, self.frame_callback)
@@ -98,14 +98,14 @@ class RealtimeVisualization():
         '''
         Function to create a visualization marker which is used inside RViz
         '''
-        marker = Marker()
-        marker.id = index
-        marker.ns = self.ns
-        marker.color = color
-        marker.action = Marker.ADD
-        marker.type = marker_type
-        marker.scale = Vector3(size, size, size)
-        marker.pose.orientation.w = 1
+        marker = Marker()# 创建一个标记点
+        marker.id = index  # 设置标记点的id
+        marker.ns = self.ns# 设置标记点的命名空间
+        marker.color = color# 设置标记点的颜色
+        marker.action = Marker.ADD# 设置标记点的操作类型
+        marker.type = marker_type# 设置标记点的类型
+        marker.scale = Vector3(size, size, size)# 设置标记点的大小
+        marker.pose.orientation.w = 1# 设置标记点的方向
         marker.header.stamp = time
         marker.header.frame_id = self.skeleton_frame
         marker.lifetime = rospy.Duration(1)  # 1 second
@@ -114,79 +114,82 @@ class RealtimeVisualization():
 
     def isValid(self, bodyPart):
         '''
-        When should we consider a body part as a valid entity?
-        We make sure that the score and z coordinate is a positive number.
-        Notice that the z coordinate denotes the distance of the object located
-        in front of the camera. Therefore it must be a positive number always.
+        何时我们应该将主体部分视为有效实体?  
+
+        我们确保分数和z坐标是一个正数。  
+
+        注意, z坐标表示所处对象的距离  
+
+        在镜头前。 因此它总是一个正数。 
         '''
         return bodyPart.score > 0 and not math.isnan(bodyPart.point.x) and not math.isnan(bodyPart.point.y) and not math.isnan(bodyPart.point.z) and bodyPart.point.z > 0
 
 
     def frame_callback(self, data):
         '''
-        This function will be called everytime whenever a message is received by the subscriber
+        每当订阅者接收到消息时，将调用此函数 
         '''
         marker_counter = 0
         person_counter = 0
         marker_array = MarkerArray()
 
-        for person in data.persons:
+        for person in data.persons:# 循环遍历每一个人
             now = rospy.Time.now()
-            marker_color = self.colors[person_counter % len(self.colors)]
+            marker_color = self.colors[person_counter % len(self.colors)]# 设置标记点的颜色
 
-            # the body_marker contains three markers as mentioned already
-            # 1. upper body 2. hands 3. legs
+            # body_marker包含前面提到的三个标记  
+            # # 1. 上半身 2. 手 3. 腿 
             body_marker = [self.create_marker(marker_counter + idx, marker_color, Marker.LINE_STRIP, self.skeleton_line_width, now) for idx in range(len(self.body_parts))]
-            marker_counter += len(self.body_parts)
+            marker_counter += len(self.body_parts)# 标记点的索引加1
 
-            # assign 3D positions to each body part
-            # make sure to consider only valid body parts
+            # 为每个身体部位分配3D位置  
+            # 确保只考虑身体的有效部位 
             for index, body_part in enumerate(self.body_parts):
-                body_marker[index].points = [person.bodyParts[idx].point for idx in body_part if self.isValid(person.bodyParts[idx])]
+                body_marker[index].points = [person.bodyParts[idx].point for idx in body_part if self.isValid(person.bodyParts[idx])]# 设置标记点的位置
 
-            marker_array.markers.extend(body_marker)
+            marker_array.markers.extend(body_marker)# 将标记点添加到标记点数组中
 
             if self.skeleton_hands:
-                left_hand = [self.create_marker(marker_counter + idx, marker_color, Marker.LINE_STRIP, self.skeleton_line_width, now) for idx in range(self.fingers)]
-                marker_counter += self.fingers
+                left_hand = [self.create_marker(marker_counter + idx, marker_color, Marker.LINE_STRIP, self.skeleton_line_width, now) for idx in range(self.fingers)]# 创建左手的标记点
+                marker_counter += self.fingers# 标记点的索引加1
 
-                right_hand = [self.create_marker(marker_counter + idx, marker_color, Marker.LINE_STRIP, self.skeleton_line_width, now) for idx in range(self.fingers)]
-                marker_counter += self.fingers
+                right_hand = [self.create_marker(marker_counter + idx, marker_color, Marker.LINE_STRIP, self.skeleton_line_width, now) for idx in range(self.fingers)]# 创建右手的标记点
+                marker_counter += self.fingers# 标记点的索引加1
 
                 keypoint_counter = 0
                 for idx in range(self.total_finger_kepoints):
-                    strip_id = idx / self.count_keypoints_one_finger
-                    temp_id = idx % self.count_keypoints_one_finger
-                    if temp_id == 0:
-                        point_id = temp_id
+                    strip_id = idx / self.count_keypoints_one_finger# 计算标记点的除数
+                    temp_id = idx % self.count_keypoints_one_finger# 计算标记点的余数
+                    if temp_id == 0:#如果被整除
+                        point_id = temp_id# 设置标记点的id
                     else:
-                        keypoint_counter += 1
-                        point_id = keypoint_counter
+                        keypoint_counter += 1# 标记点的索引加1
+                        point_id = keypoint_counter# 设置标记点的id
 
-                    leftHandPart = person.leftHandParts[point_id]
-                    rightHandPart = person.rightHandParts[point_id]
+                    leftHandPart = person.leftHandParts[point_id]# 获取左手的标记点
+                    rightHandPart = person.rightHandParts[point_id]# 获取右手的标记点
                     if self.isValid(leftHandPart):
-                        left_hand[strip_id].points.append(leftHandPart.point)
+                        left_hand[strip_id].points.append(leftHandPart.point)# 将标记点的位置添加到标记点的位置列表中
 
                     if self.isValid(rightHandPart):
-                        right_hand[strip_id].points.append(rightHandPart.point)
+                        right_hand[strip_id].points.append(rightHandPart.point)# 将标记点的位置添加到标记点的位置列表中
                 marker_array.markers.extend(left_hand)
                 marker_array.markers.extend(right_hand)
 
-            person_id = self.create_marker(marker_counter, marker_color, Marker.TEXT_VIEW_FACING, self.id_text_size, now)
+            person_id = self.create_marker(marker_counter, marker_color, Marker.TEXT_VIEW_FACING, self.id_text_size, now)# 创建标记点
             marker_counter += 1
             # assign person id and 3D position
-            person_id.text = str(person_counter)
+            person_id.text = str(person_counter)# 设置标记点的文本
             nose = person.bodyParts[self.nose_id]
             if self.isValid(nose):
-                person_id.pose.position = Point(nose.point.x, nose.point.y + self.id_text_offset, nose.point.z)
-                marker_array.markers.append(person_id)
+                person_id.pose.position = Point(nose.point.x, nose.point.y + self.id_text_offset, nose.point.z)# 设置标记点的位置
+                marker_array.markers.append(person_id)# 将标记点添加到标记点数组中
 
             # update the counter
-            person_counter += 1
+            person_counter += 1# 标记点的索引加1
 
         # publish the markers
-        self.skeleton_pub.publish(marker_array)
+        self.skeleton_pub.publish(marker_array)# 发布标记点数组
 
 
 if __name__ == '__main__':

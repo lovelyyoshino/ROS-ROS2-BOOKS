@@ -10,7 +10,9 @@
  */
 
 // todo: merge the 'for' loop for body and hand keypoints into one
-
+/***************************
+ * 异步和同步的代码基本类似，这里就不详细注释了
+ **************************/
 // OpenPose headers
 #include <openpose/flags.hpp>
 #include <openpose/headers.hpp>
@@ -20,12 +22,12 @@
 #include <ros_openpose/cameraReader.hpp>
 
 // define a macro for compatibility with older versions
-#define OPENPOSE1POINT6_OR_HIGHER OpenPose_VERSION_MAJOR >= 1 && OpenPose_VERSION_MINOR >= 6
+#define OPENPOSE1POINT6_OR_HIGHER OpenPose_VERSION_MAJOR >= 1 && OpenPose_VERSION_MINOR >= 6  //设置OpenPose版本号
 #define OPENPOSE1POINT7POINT1_OR_HIGHER                                                                                \
-  OpenPose_VERSION_MAJOR >= 1 && OpenPose_VERSION_MINOR >= 7 && OpenPose_VERSION_PATCH >= 1
+  OpenPose_VERSION_MAJOR >= 1 && OpenPose_VERSION_MINOR >= 7 && OpenPose_VERSION_PATCH >= 1  //设置OpenPose版本号
 
 // define sleep for input and output worker in milliseconds
-const int SLEEP_MS = 10;
+const int SLEEP_MS = 10;  //毫秒
 
 // define a few datatype
 typedef std::shared_ptr<op::Datum> sPtrDatum;
@@ -48,35 +50,35 @@ public:
   {
     try
     {
-      auto frameNumber = mSPtrCameraReader->getFrameNumber();
-      if (frameNumber == 0 || frameNumber == mFrameNumber)
+      auto frameNumber = mSPtrCameraReader->getFrameNumber();  //获取帧号
+      if (frameNumber == 0 || frameNumber == mFrameNumber)  //如果帧号为0或者与上一帧相同，则不做任何处理
       {
         // display the error at most once per 10 seconds
-        ROS_WARN_THROTTLE(10, "Waiting for color image frame...");
-        std::this_thread::sleep_for(std::chrono::milliseconds{SLEEP_MS});
+        ROS_WARN_THROTTLE(10, "Waiting for color image frame...");         //输出提示信息
+        std::this_thread::sleep_for(std::chrono::milliseconds{SLEEP_MS});  //睡眠
         return nullptr;
       }
       else
       {
         // update frame number
-        mFrameNumber = frameNumber;
+        mFrameNumber = frameNumber;  //更新帧号
 
         // get the latest color image from the camera
-        auto& colorImage = mSPtrCameraReader->getColorFrame();
+        auto& colorImage = mSPtrCameraReader->getColorFrame();  //获取彩色图像
 
         if (!colorImage.empty())
         {
           // create new datum
-          auto datumsPtr = std::make_shared<std::vector<sPtrDatum>>();
-          datumsPtr->emplace_back();
-          auto& datumPtr = datumsPtr->at(0);
-          datumPtr = std::make_shared<op::Datum>();
+          auto datumsPtr = std::make_shared<std::vector<sPtrDatum>>();  //创建新的datum
+          datumsPtr->emplace_back();                                    //添加一个datum
+          auto& datumPtr = datumsPtr->at(0);                            //获取datum
+          datumPtr = std::make_shared<op::Datum>();                     //创建一个新的datum
 
 // fill the datum
 #if OPENPOSE1POINT6_OR_HIGHER
           datumPtr->cvInputData = OP_CV2OPCONSTMAT(colorImage);
 #else
-          datumPtr->cvInputData = colorImage;
+          datumPtr->cvInputData = colorImage;  //获取彩色图像
 #endif
           return datumsPtr;
         }
@@ -93,14 +95,14 @@ public:
       this->stop();
       // display the error at most once per 10 seconds
       ROS_ERROR_THROTTLE(10, "Error %s at line number %d on function %s in file %s", e.what(), __LINE__, __FUNCTION__,
-                         __FILE__);
+                         __FILE__);  //输出错误信息
       return nullptr;
     }
   }
 
 private:
-  ullong mFrameNumber = 0ULL;
-  const std::shared_ptr<ros_openpose::CameraReader> mSPtrCameraReader;
+  ullong mFrameNumber = 0ULL;                                           //帧号
+  const std::shared_ptr<ros_openpose::CameraReader> mSPtrCameraReader;  //摄像头读取器
 };
 
 // the outpout worker. the job of the output worker is to receive the keypoints
@@ -131,17 +133,17 @@ public:
     {
       // src:
       // https://github.com/CMU-Perceptual-Computing-Lab/openpose/blob/master/doc/output.md#keypoint-format-in-the-c-api
-      const auto baseIndex = poseKeypoints.getSize(2) * (person * bodyPartCount + bodyPart);
-      const auto x = poseKeypoints[baseIndex];
-      const auto y = poseKeypoints[baseIndex + 1];
-      const auto score = poseKeypoints[baseIndex + 2];
+      const auto baseIndex = poseKeypoints.getSize(2) * (person * bodyPartCount + bodyPart);  //获取基础索引
+      const auto x = poseKeypoints[baseIndex];                                                //获取x坐标
+      const auto y = poseKeypoints[baseIndex + 1];                                            //获取y坐标
+      const auto score = poseKeypoints[baseIndex + 2];                                        //获取得分
 
       float point3D[3];
       // compute 3D point only if depth flag is set
       if (!mNoDepth)
-        mSPtrCameraReader->compute3DPoint(x, y, point3D);
+        mSPtrCameraReader->compute3DPoint(x, y, point3D);  //计算3D点
 
-      mFrame.persons[person].bodyParts[bodyPart].pixel.x = x;
+      mFrame.persons[person].bodyParts[bodyPart].pixel.x = x;  //设置像素坐标
       mFrame.persons[person].bodyParts[bodyPart].pixel.y = y;
       mFrame.persons[person].bodyParts[bodyPart].score = score;
       mFrame.persons[person].bodyParts[bodyPart].point.x = point3D[0];
@@ -156,12 +158,12 @@ public:
 #pragma omp parallel for
     for (auto handPart = 0; handPart < handPartCount; handPart++)
     {
-      const auto baseIndex = handKeypoints[0].getSize(2) * (person * handPartCount + handPart);
+      const auto baseIndex = handKeypoints[0].getSize(2) * (person * handPartCount + handPart);  //获取基础索引
 
       // left hand
-      const auto xLeft = handKeypoints[0][baseIndex];
-      const auto yLeft = handKeypoints[0][baseIndex + 1];
-      const auto scoreLeft = handKeypoints[0][baseIndex + 2];
+      const auto xLeft = handKeypoints[0][baseIndex];          //获取x坐标
+      const auto yLeft = handKeypoints[0][baseIndex + 1];      //获取y坐标
+      const auto scoreLeft = handKeypoints[0][baseIndex + 2];  //获取得分
 
       // right hand
       const auto xRight = handKeypoints[1][baseIndex];
@@ -174,8 +176,8 @@ public:
       // compute 3D point only if depth flag is set
       if (!mNoDepth)
       {
-        mSPtrCameraReader->compute3DPoint(xLeft, yLeft, point3DLeft);
-        mSPtrCameraReader->compute3DPoint(xRight, yRight, point3DRight);
+        mSPtrCameraReader->compute3DPoint(xLeft, yLeft, point3DLeft);     //计算3D点
+        mSPtrCameraReader->compute3DPoint(xRight, yRight, point3DRight);  //计算3D点
       }
 
       mFrame.persons[person].leftHandParts[handPart].pixel.x = xLeft;
@@ -201,31 +203,31 @@ public:
       if (datumsPtr != nullptr && !datumsPtr->empty())
       {
         // update timestamp
-        mFrame.header.stamp = ros::Time::now();
+        mFrame.header.stamp = ros::Time::now();  //获取当前时间
 
         // make sure to clear previous data
-        mFrame.persons.clear();
+        mFrame.persons.clear();  //清空数据
 
         // we use the latest depth image for computing point in 3D space
-        mSPtrCameraReader->lockLatestDepthImage();
+        mSPtrCameraReader->lockLatestDepthImage();  //锁定最新的深度图像
 
         // accesing each element of the keypoints
-        const auto& poseKeypoints = datumsPtr->at(0)->poseKeypoints;
-        const auto& handKeypoints = datumsPtr->at(0)->handKeypoints;
+        const auto& poseKeypoints = datumsPtr->at(0)->poseKeypoints;  //获取关键点数据
+        const auto& handKeypoints = datumsPtr->at(0)->handKeypoints;  //获取手部关键点数据
 
         // get the size
-        const auto personCount = poseKeypoints.getSize(0);
-        const auto bodyPartCount = poseKeypoints.getSize(1);
-        const auto handPartCount = handKeypoints[0].getSize(1);
+        const auto personCount = poseKeypoints.getSize(0);       //获取人数
+        const auto bodyPartCount = poseKeypoints.getSize(1);     //获取关键点数量
+        const auto handPartCount = handKeypoints[0].getSize(1);  //获取手部关键点数量
 
         mFrame.persons.resize(personCount);
 
         // update with the new data
         for (auto person = 0; person < personCount; person++)
         {
-          mFrame.persons[person].bodyParts.resize(bodyPartCount);
-          mFrame.persons[person].leftHandParts.resize(handPartCount);
-          mFrame.persons[person].rightHandParts.resize(handPartCount);
+          mFrame.persons[person].bodyParts.resize(bodyPartCount);       //设置关键点数量
+          mFrame.persons[person].leftHandParts.resize(handPartCount);   //设置手部关键点数量
+          mFrame.persons[person].rightHandParts.resize(handPartCount);  //设置手部关键点数量
 
           fillBodyROSMsg(poseKeypoints, person, bodyPartCount);
           fillHandROSMsg(handKeypoints, person, handPartCount);
@@ -275,7 +277,7 @@ void configureOpenPose(op::Wrapper& opWrapper,
               "Wrong logging_level value.",
               __LINE__,
               __FUNCTION__,
-              __FILE__);
+              __FILE__);//检查日志级别是否合法
 
     op::ConfigureLog::setPriorityThreshold((op::Priority)FLAGS_logging_level);
     op::Profiler::setDefaultX(FLAGS_profile_speed);

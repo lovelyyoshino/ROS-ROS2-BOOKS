@@ -31,40 +31,40 @@ OPENPOSE1POINT7_OR_HIGHER = 'VectorDatum' in op.__dict__
 class rosOpenPose:
     def __init__(self, frame_id, no_depth, pub_topic, color_topic, depth_topic, cam_info_topic, op_wrapper, display):
 
-        self.pub = rospy.Publisher(pub_topic, Frame, queue_size=10)
+        self.pub = rospy.Publisher(pub_topic, Frame, queue_size=10)#设置发布的topic
 
-        self.frame_id = frame_id
-        self.no_depth = no_depth
+        self.frame_id = frame_id#设置frame_id
+        self.no_depth = no_depth#设置是否没有深度图
 
-        self.bridge = CvBridge()
+        self.bridge = CvBridge()#创建CvBridge对象
 
-        self.op_wrapper = op_wrapper
+        self.op_wrapper = op_wrapper#设置op_wrapper
 
         self.display = display
         self.frame = None
 
         # Populate necessary K matrix values for 3D pose computation.
-        cam_info = rospy.wait_for_message(cam_info_topic, CameraInfo)
+        cam_info = rospy.wait_for_message(cam_info_topic, CameraInfo)#等待相机信息
         self.fx = cam_info.K[0]
         self.fy = cam_info.K[4]
         self.cx = cam_info.K[2]
         self.cy = cam_info.K[5]
 
         # Obtain depth topic encoding
-        encoding = rospy.wait_for_message(depth_topic, Image).encoding
-        self.mm_to_m = 0.001 if encoding == "16UC1" else 1.
+        encoding = rospy.wait_for_message(depth_topic, Image).encoding#等待深度图
+        self.mm_to_m = 0.001 if encoding == "16UC1" else 1.#设置深度图的编码
 
         # Function wrappers for OpenPose version discrepancies
         if OPENPOSE1POINT7_OR_HIGHER:
-            self.emplaceAndPop = lambda datum: self.op_wrapper.emplaceAndPop(op.VectorDatum([datum]))
-            self.detect = lambda kp: kp is not None
+            self.emplaceAndPop = lambda datum: self.op_wrapper.emplaceAndPop(op.VectorDatum([datum]))#设置op_wrapper
+            self.detect = lambda kp: kp is not None#设置op_wrapper
         else:
             self.emplaceAndPop = lambda datum: self.op_wrapper.emplaceAndPop([datum])
             self.detect = lambda kp: kp.shape != ()
 
         image_sub = message_filters.Subscriber(color_topic, Image)
         depth_sub = message_filters.Subscriber(depth_topic, Image)
-        self.ts = message_filters.ApproximateTimeSynchronizer([image_sub, depth_sub], 1, 0.01)
+        self.ts = message_filters.ApproximateTimeSynchronizer([image_sub, depth_sub], 1, 0.01)#设置时间同步器
         self.ts.registerCallback(self.callback)
 
         """ OpenPose skeleton dictionary
@@ -85,112 +85,112 @@ class rosOpenPose:
 
     def compute_3D_vectorized(self, kp, depth):
         # Create views (no copies made, so this remains efficient)
-        U = kp[:, :, 0]
-        V = kp[:, :, 1]
+        U = kp[:, :, 0]#设置U
+        V = kp[:, :, 1]#设置V
 
         # Extract the appropriate depth readings
-        num_persons, body_part_count = U.shape
-        XYZ = np.zeros((num_persons, body_part_count, 3), dtype=np.float32)
+        num_persons, body_part_count = U.shape#设置人体数量和人体部位数量
+        XYZ = np.zeros((num_persons, body_part_count, 3), dtype=np.float32)#设置XYZ
         for i in range(num_persons):
             for j in range(body_part_count):
                 u, v = int(U[i, j]), int(V[i, j])
-                if v < depth.shape[0] and u < depth.shape[1]:
-                    XYZ[i, j, 2] = depth[v, u]
+                if v < depth.shape[0] and u < depth.shape[1]:#设置深度图的大小
+                    XYZ[i, j, 2] = depth[v, u]#设置深度图的深度
 
-        XYZ[:, :, 2] *= self.mm_to_m  # convert to meters
+        XYZ[:, :, 2] *= self.mm_to_m  #转换为m
 
         # Compute 3D coordinates in vectorized way
         Z = XYZ[:, :, 2]
-        XYZ[:, :, 0] = (Z / self.fx) * (U - self.cx)
-        XYZ[:, :, 1] = (Z / self.fy) * (V - self.cy)
+        XYZ[:, :, 0] = (Z / self.fx) * (U - self.cx)#设置X
+        XYZ[:, :, 1] = (Z / self.fy) * (V - self.cy)#设置Y
         return XYZ
 
     def callback(self, ros_image, ros_depth):
         # Construct a frame with current time !before! pushing to OpenPose
         fr = Frame()
-        fr.header.frame_id = self.frame_id
+        fr.header.frame_id = self.frame_id#设置frame_id
         fr.header.stamp = rospy.Time.now()
 
         # Convert images to cv2 matrices
         image = depth = None
         try:
-            image = self.bridge.imgmsg_to_cv2(ros_image, "bgr8")
-            depth = self.bridge.imgmsg_to_cv2(ros_depth, "passthrough")
+            image = self.bridge.imgmsg_to_cv2(ros_image, "bgr8")#设置图像
+            depth = self.bridge.imgmsg_to_cv2(ros_depth, "passthrough")#设置深度图
         except CvBridgeError as e:
             rospy.logerr("CvBridge Error: {0}".format(e))
 
         # Push data to OpenPose and block while waiting for results
         datum = op.Datum()
-        datum.cvInputData = image
-        self.emplaceAndPop(datum)
+        datum.cvInputData = image#设置图像
+        self.emplaceAndPop(datum)#设置op_wrapper
 
-        pose_kp = datum.poseKeypoints
-        lhand_kp = datum.handKeypoints[0]
-        rhand_kp = datum.handKeypoints[1]
+        pose_kp = datum.poseKeypoints#设置人体关键点
+        lhand_kp = datum.handKeypoints[0]#设置左手关键点
+        rhand_kp = datum.handKeypoints[1]#设置右手关键点
 
         # Set number of people detected
         if self.detect(pose_kp):
-            num_persons = pose_kp.shape[0]
-            body_part_count = pose_kp.shape[1]
+            num_persons = pose_kp.shape[0]#设置人体数量
+            body_part_count = pose_kp.shape[1]#设置人体部位数量
         else:
             num_persons = 0
             body_part_count = 0
 
         # Check to see if hands were detected
-        lhand_detected = False
-        rhand_detected = False
+        lhand_detected = False#设置左手是否检测到
+        rhand_detected = False#设置右手是否检测到
         hand_part_count = 0
 
         if self.detect(lhand_kp):
-            lhand_detected = True
-            hand_part_count = lhand_kp.shape[1]
+            lhand_detected = True#设置左手检测到
+            hand_part_count = lhand_kp.shape[1]#设置左手部位数量
 
         if self.detect(rhand_kp):
-            rhand_detected = True
-            hand_part_count = rhand_kp.shape[1]
+            rhand_detected = True#设置右手检测到
+            hand_part_count = rhand_kp.shape[1]#设置右手部位数量
 
         # Handle body points
-        fr.persons = [Person() for _ in range(num_persons)]
+        fr.persons = [Person() for _ in range(num_persons)]#设置人体
         if num_persons != 0:
             # Perform vectorized 3D computation for body keypoints
-            b_XYZ = self.compute_3D_vectorized(pose_kp, depth)
+            b_XYZ = self.compute_3D_vectorized(pose_kp, depth)#设置XYZ
 
             # Perform the vectorized operation for left hand
             if lhand_detected:
-                lh_XYZ = self.compute_3D_vectorized(lhand_kp, depth)
+                lh_XYZ = self.compute_3D_vectorized(lhand_kp, depth)#设置左手XYZ
 
             # Do same for right hand
             if rhand_detected:
-                rh_XYZ = self.compute_3D_vectorized(rhand_kp, depth)
+                rh_XYZ = self.compute_3D_vectorized(rhand_kp, depth)#设置右手XYZ
 
             for person in range(num_persons):
-                fr.persons[person].bodyParts = [BodyPart() for _ in range(body_part_count)]
-                fr.persons[person].leftHandParts = [BodyPart() for _ in range(hand_part_count)]
-                fr.persons[person].rightHandParts = [BodyPart() for _ in range(hand_part_count)]
+                fr.persons[person].bodyParts = [BodyPart() for _ in range(body_part_count)]#设置人体部位
+                fr.persons[person].leftHandParts = [BodyPart() for _ in range(hand_part_count)]#设置左手部位
+                fr.persons[person].rightHandParts = [BodyPart() for _ in range(hand_part_count)]#设置右手部位
 
                 detected_hands = []
                 if lhand_detected:
-                    detected_hands.append((lhand_kp, fr.persons[person].leftHandParts, lh_XYZ))
+                    detected_hands.append((lhand_kp, fr.persons[person].leftHandParts, lh_XYZ))#设置左手
                 if rhand_detected:
-                    detected_hands.append((rhand_kp, fr.persons[person].rightHandParts, rh_XYZ))
+                    detected_hands.append((rhand_kp, fr.persons[person].rightHandParts, rh_XYZ))#设置右手
 
                 # Process the body
                 for bp in range(body_part_count):
-                    u, v, s = pose_kp[person, bp]
-                    x, y, z = b_XYZ[person, bp]
-                    arr = fr.persons[person].bodyParts[bp]
+                    u, v, s = pose_kp[person, bp]#设置人体关键点
+                    x, y, z = b_XYZ[person, bp]#设置XYZ
+                    arr = fr.persons[person].bodyParts[bp]#设置人体部位
                     arr.pixel.x = u
                     arr.pixel.y = v
-                    arr.score = s
+                    arr.score = s #设置分数
                     arr.point.x = x
                     arr.point.y = y
                     arr.point.z = z
 
                 # Process left and right hands
-                for kp, harr, h_XYZ in detected_hands:
-                    for hp in range(hand_part_count):
-                        u, v, s = kp[person, hp]
-                        x, y, z = h_XYZ[person, hp]
+                for kp, harr, h_XYZ in detected_hands:#设置左右手
+                    for hp in range(hand_part_count):#设置手部位
+                        u, v, s = kp[person, hp]#设置关键点
+                        x, y, z = h_XYZ[person, hp]#设置XYZ
                         arr = harr[hp]
                         arr.pixel.x = u
                         arr.pixel.y = v
@@ -199,7 +199,7 @@ class rosOpenPose:
                         arr.point.y = y
                         arr.point.z = z
 
-        if self.display: self.frame = datum.cvOutputData.copy()
+        if self.display: self.frame = datum.cvOutputData.copy()#设置显示图像
         self.pub.publish(fr)
 
 
@@ -226,8 +226,8 @@ def main():
             if i != len(args[1])-1: next_item = args[1][i+1]
             else: next_item = "1"
             if "--" in curr_item and "--" in next_item:
-                key = curr_item.replace('-', '')
-                if key not in params:  params[key] = "1"
+                key = curr_item.replace('-', '')#设置key
+                if key not in params:  params[key] = "1"#设置值
             elif "--" in curr_item and "--" not in next_item:
                 key = curr_item.replace('-', '')
                 if key not in params: params[key] = next_item
@@ -240,7 +240,7 @@ def main():
         display = True if 'display' not in params or int(params['display']) > 0 else False
 
         # Start ros wrapper
-        rop = rosOpenPose(frame_id, no_depth, pub_topic, color_topic, depth_topic, cam_info_topic, op_wrapper, display)
+        rop = rosOpenPose(frame_id, no_depth, pub_topic, color_topic, depth_topic, cam_info_topic, op_wrapper, display)#设置参数
 
         if display:
             while not rospy.is_shutdown():
