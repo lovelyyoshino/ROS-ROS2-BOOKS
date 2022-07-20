@@ -34,9 +34,8 @@ wstool update -t src
 rosdep install --from-paths src --ignore-src --rosdistro kinetic -y --as-root apt:false
 mkdir ~/src
 cd ~/src
-git clone https://github.com/darknight-007/Firmware
+git clone https://github.com/lovelyyoshino/Firmware.git
 cd Firmware
-git submodule update --init --recursive
 make posix_sitl_default
 ln -s ~/src/Firmware ~/catkin_ws/src
 ln -s ~/src/Firmware/Tools/sitl_gazebo ~/catkin_ws/src
