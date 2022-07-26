@@ -34,7 +34,7 @@ wstool update -t src
 rosdep install --from-paths src --ignore-src --rosdistro kinetic -y --as-root apt:false
 mkdir ~/src
 cd ~/src
-git clone https://github.com/lovelyyoshino/Firmware.git
+git clone https://github.com/Moutwa/Firmware.git
 cd Firmware
 make posix_sitl_default
 ln -s ~/src/Firmware ~/catkin_ws/src
