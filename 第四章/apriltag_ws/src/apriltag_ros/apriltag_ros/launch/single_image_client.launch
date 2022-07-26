@@ -1,24 +1,36 @@
 <launch>
 
-  <arg name="launch_prefix" default="" /> <!--set to value="gdbserver localhost:10000" for remote debugging-->
+  <arg name="launch_prefix" default="" />
+  <!--set to value="gdbserver localhost:10000" for remote debugging-->
   <arg name="node_namespace" default="apriltag_ros_single_image_client_node" />
-  <arg name="image_load_path" /> <!-- Where to load image for analysis from -->
-  <arg name="image_save_path" /> <!-- Where to save tag detections image -->
+  <!--设置node的命名空间-->
+  <arg name="image_load_path" />
+  <!--设置图像读取的路径-->
+  <arg name="image_save_path" />
+  <!--设置图像保存的路径-->
 
   <!-- Set parameters -->
   <rosparam command="load" file="$(find apriltag_ros)/config/settings.yaml" ns="$(arg node_namespace)" />
+  <!--设置读取settings文件里面参数-->
   <rosparam command="load" file="$(find apriltag_ros)/config/tags.yaml" ns="$(arg node_namespace)" />
+  <!--设置读取tags文件里面参数-->
 
-  <node pkg="apriltag_ros" type="apriltag_ros_single_image_client_node" name="$(arg node_namespace)" clear_params="true" output="screen" launch-prefix="$(arg launch_prefix)" >
+  <node pkg="apriltag_ros" type="apriltag_ros_single_image_client_node" name="$(arg node_namespace)" clear_params="true" output="screen" launch-prefix="$(arg launch_prefix)">
 
     <param name="image_load_path" type="str" value="$(arg image_load_path)" />
+    <!--设置图像读取的路径-->
     <param name="image_save_path" type="str" value="$(arg image_save_path)" />
+    <!--设置图像保存的路径-->
 
     <!-- Camera intrinsic parameters -->
     <param name="fx" type="double" value="652.7934615847107" />
+    <!--设置相机的fx-->
     <param name="fy" type="double" value="653.9480389077635" />
+    <!--设置相机的fy-->
     <param name="cx" type="double" value="307.1288710375904" />
+    <!--设置相机的cx-->
     <param name="cy" type="double" value="258.7823279214385" />
+    <!--设置相机的cy-->
 
   </node>
 

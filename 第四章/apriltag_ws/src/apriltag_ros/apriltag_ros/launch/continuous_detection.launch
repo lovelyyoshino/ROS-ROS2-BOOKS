@@ -1,21 +1,34 @@
 <launch>
-  <arg name="launch_prefix" default="" /> <!-- set to value="gdbserver localhost:10000" for remote debugging -->
+  <arg name="launch_prefix" default="" />
+  <!-- set to value="gdbserver localhost:10000" for remote debugging -->
   <arg name="node_namespace" default="apriltag_ros_continuous_node" />
+  <!--设置node的命名空间-->
   <arg name="camera_name" default="/prometheus/sensor/monocular_down" />
+  <!--设置相机的名称-->
   <arg name="camera_frame" default="camera" />
+  <!--设置相机的frame名称-->
   <arg name="image_topic" default="image_raw" />
+  <!--设置图像的topic名称-->
 
   <!-- Set parameters -->
   <rosparam command="load" file="$(find apriltag_ros)/config/settings.yaml" ns="$(arg node_namespace)" />
+  <!--设置读取settings文件里面参数-->
   <rosparam command="load" file="$(find apriltag_ros)/config/tags.yaml" ns="$(arg node_namespace)" />
-  
-  <node pkg="apriltag_ros" type="apriltag_ros_continuous_node" name="$(arg node_namespace)" clear_params="true" output="screen" launch-prefix="$(arg launch_prefix)" >
+  <!--设置读取tags文件里面参数-->
+
+  <node pkg="apriltag_ros" type="apriltag_ros_continuous_node" name="$(arg node_namespace)" clear_params="true" output="screen" launch-prefix="$(arg launch_prefix)">
     <!-- Remap topics from those used in code to those on the ROS network -->
     <remap from="image_rect" to="$(arg camera_name)/$(arg image_topic)" />
+    <!--设置图像的topic名称-->
     <remap from="camera_info" to="$(arg camera_name)/camera_info" />
+    <!--设置相机的信息的topic名称-->
 
     <param name="camera_frame" type="str" value="$(arg camera_frame)" />
+    <!--设置相机的frame名称-->
     <param name="remove_duplicates" type="bool" value="false" />
-    <param name="publish_tag_detections_image" type="bool" value="true" />      <!-- default: false -->
+    <!--设置是否去除重复的标签-->
+    <param name="publish_tag_detections_image" type="bool" value="true" />
+    <!--设置是否发布标签的图像-->
+    <!-- default: false -->
   </node>
 </launch>

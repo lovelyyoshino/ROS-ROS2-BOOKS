@@ -1,5 +1,7 @@
 # apriltag_ros
 
+测试用rosbag包在链接：https://pan.baidu.com/s/1iFWAp_8r9lU8G9qNfq_8Yg 中。提取码为：2233
+
 `apriltag_ros` is a Robot Operating System (ROS) wrapper of the [AprilTag 3 visual fiducial detector](https://april.eecs.umich.edu/software/apriltag.html). For details and tutorials, please see the [ROS wiki](http://wiki.ros.org/apriltag_ros).
 
 `apriltag_ros` depends on the latest release of the [AprilTag library](https://github.com/AprilRobotics/apriltag). Clone it into your catkin workspace before building.
