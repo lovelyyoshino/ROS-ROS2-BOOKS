@@ -8,40 +8,49 @@
 
 #include "darknet_ros/image_interface.hpp"
 
-static float get_pixel(image m, int x, int y, int c) {
+static float get_pixel(image m, int x, int y, int c)
+{ //获取某个像素点的值
   assert(x < m.w && y < m.h && c < m.c);
   return m.data[c * m.h * m.w + y * m.w + x];
 }
 
-image** load_alphabet_with_file(char* datafile) {
+image **load_alphabet_with_file(char *datafile) //加载模型label表
+{
   int i, j;
-  const int nsize = 8;
-  image** alphabets = (image**)calloc(nsize, sizeof(image));
-  char* labels = "/labels/%d_%d.png";
-  char* files = (char*)malloc(1 + strlen(datafile) + strlen(labels));
+  const int nsize = 8;                                        // label表的大小
+  image **alphabets = (image **)calloc(nsize, sizeof(image)); //分配空间
+  char *labels = "/labels/%d_%d.png";
+  char *files = (char *)malloc(1 + strlen(datafile) + strlen(labels)); //分配空间
   strcpy(files, datafile);
   strcat(files, labels);
-  for (j = 0; j < nsize; ++j) {
-    alphabets[j] = (image*)calloc(128, sizeof(image));
-    for (i = 32; i < 127; ++i) {
+  for (j = 0; j < nsize; ++j)
+  {
+    alphabets[j] = (image *)calloc(128, sizeof(image)); //分配空间
+    for (i = 32; i < 127; ++i)
+    {
       char buff[256];
-      sprintf(buff, files, i, j);
-      alphabets[j][i] = load_image_color(buff, 0, 0);
+      sprintf(buff, files, i, j);                     //拼接字符串
+      alphabets[j][i] = load_image_color(buff, 0, 0); //加载图片
     }
   }
   return alphabets;
 }
 
 #ifdef OPENCV
-void generate_image(image p, cv::Mat& disp) {
+void generate_image(image p, cv::Mat &disp)
+{
   int x, y, k;
-  if (p.c == 3) rgbgr_image(p);
+  if (p.c == 3)
+    rgbgr_image(p);
   // normalize_image(copy);
 
   int step = disp.step;
-  for (y = 0; y < p.h; ++y) {
-    for (x = 0; x < p.w; ++x) {
-      for (k = 0; k < p.c; ++k) {
+  for (y = 0; y < p.h; ++y)
+  {
+    for (x = 0; x < p.w; ++x)
+    {
+      for (k = 0; k < p.c; ++k)
+      {
         disp.data[y * step + x * p.c + k] = (unsigned char)(get_pixel(p, x, y, k) * 255);
       }
     }

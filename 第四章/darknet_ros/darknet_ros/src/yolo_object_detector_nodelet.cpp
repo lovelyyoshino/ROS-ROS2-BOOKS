@@ -8,21 +8,25 @@
 #include <ros/ros.h>
 #include <darknet_ros/YoloObjectDetector.hpp>
 
-class DarknetRosNodelet : public nodelet::Nodelet {
- public:
-  DarknetRosNodelet() = default;
-  ~DarknetRosNodelet() {
-    if (darknetRos_) delete darknetRos_;
-  }
+class DarknetRosNodelet : public nodelet::Nodelet
+{
+public:
+  DarknetRosNodelet() = default; //构造函数
+  ~DarknetRosNodelet()
+  {
+    if (darknetRos_)
+      delete darknetRos_;
+  } //析构函数
 
- private:
-  virtual void onInit() {
+private:
+  virtual void onInit()
+  {
     ros::NodeHandle NodeHandle("~");
-    NodeHandle = getPrivateNodeHandle();
-    darknetRos_ = new darknet_ros::YoloObjectDetector(NodeHandle);
+    NodeHandle = getPrivateNodeHandle();                           //获取私有节点句柄
+    darknetRos_ = new darknet_ros::YoloObjectDetector(NodeHandle); //创建YoloObjectDetector对象
   }
 
-  darknet_ros::YoloObjectDetector* darknetRos_;
+  darknet_ros::YoloObjectDetector *darknetRos_;
 };
 
 // Declare as a Plug-in
