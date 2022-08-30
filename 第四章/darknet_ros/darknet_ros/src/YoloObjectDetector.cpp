@@ -512,8 +512,8 @@ namespace darknet_ros
     demoHier_ = hier;                                     //设置层数
     fullScreen_ = fullscreen;                             //设置是否全屏
     printf("YOLO\n");
-    net_ = load_network(cfgfile, weightfile, 0); //加载网络模型
-    set_batch_network(net_, 1);                  //设置网络模型的batch为1
+    net_ = (cfgfile, weightfile, 0); //加载网络模型
+    set_batch_network(net_, 1);      //设置网络模型的batch为1
   }
 
   void YoloObjectDetector::yolo()
