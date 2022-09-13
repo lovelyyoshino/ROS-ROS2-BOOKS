@@ -9,3 +9,6 @@ $ mkdir -p workspace/src && cd workspace/src
 ## 将文件和submodule一起拉出
 $ git clone --recursive https://github.com/lovelyyoshino/ROS-ROS2-BOOKS.git
 ```
+
+## 可能需要用到的rosbag包：
+https://pan.baidu.com/s/1iFWAp_8r9lU8G9qNfq_8Yg ，提取码为：2233
