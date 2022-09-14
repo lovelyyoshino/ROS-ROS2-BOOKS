@@ -1,0 +1,71 @@
+
+.. _program_listing_file_include_path_planning_genetic_algorithm.hpp:
+
+Program Listing for File genetic_algorithm.hpp
+==============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_path_planning_genetic_algorithm.hpp>` (``include/path_planning/genetic_algorithm.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   #ifndef GENETIC_ALGORITHM_H
+   #define GENETIC_ALGORITHM_H
+   
+   #include <limits>
+   
+   #include "path_planning/planner.hpp"
+   #include "utils/utils.hpp"
+   
+   class GeneticAlgorithm : public Planner {
+    public:
+     explicit GeneticAlgorithm(const std::vector<std::vector<int>>& grid)
+         : Planner(grid){};
+   
+     void SetParams(const int generations = 10000, const int popsize = 30,
+                    const double c = 1.05, const bool shorten_chromosome = false,
+                    const int path_length = 30);
+   
+     std::tuple<bool, std::vector<Node>> Plan(const Node& start,
+                                              const Node& goal) override;
+   
+     std::vector<Node> ReturnLastPath() const;
+   
+     // given the way a genetic algorithm decreases fitness values, the last path
+     // is likely ot be the best. Can reorder ased on actual fitness values if
+     // required.
+   
+     void PrintChromosome(const std::vector<Node>& path) const;
+   
+     void PrintPathOfChromosome(const std::vector<Node>& path) const;
+   
+     std::vector<Node> GenerateSimplePath() const;
+   
+     std::vector<Node> GenerateRandomPath() const;
+     int CalculateFitness(const std::vector<Node>& path) const;
+   
+     std::vector<Node> Crossover() const;
+   
+     std::vector<Node> Mutate() const;
+   
+     bool CheckPath(const std::vector<Node>& path) const;
+   
+     void CheckIfNodesInPathAreAcceptable(const std::vector<Node>& path) const;
+   
+    private:
+     std::vector<Node> motions_;
+     Node start_, goal_;
+     size_t path_length_ = 30;
+     int f_val = std::numeric_limits<int>::max();
+     int generations_ = 10000;
+     int popsize_ = 30;
+     double c_ = 1.05;
+     std::vector<std::vector<Node>> paths_;
+     std::vector<std::vector<Node>> truepaths_;
+     bool found_ = false;
+     bool shorten_chromosome_ = false;
+   };
+   
+   #endif  // GENETIC_ALGORITHM_H

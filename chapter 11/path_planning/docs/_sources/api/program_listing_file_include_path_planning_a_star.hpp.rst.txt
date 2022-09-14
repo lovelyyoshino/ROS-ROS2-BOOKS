@@ -1,0 +1,36 @@
+
+.. _program_listing_file_include_path_planning_a_star.hpp:
+
+Program Listing for File a_star.hpp
+===================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_path_planning_a_star.hpp>` (``include/path_planning/a_star.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   #ifndef A_STAR_H
+   #define A_STAR_H
+   
+   #include <queue>
+   
+   #include "path_planning/planner.hpp"
+   #include "utils/utils.hpp"
+   
+   class AStar : public Planner {
+    public:
+     explicit AStar(std::vector<std::vector<int>> grid)
+         : Planner(std::move(grid)) {}
+   
+     std::tuple<bool, std::vector<Node>> Plan(const Node& start,
+                                              const Node& goal) override;
+   
+    private:
+     std::vector<Node> ConvertClosedListToPath(
+         std::unordered_set<Node, NodeIdAsHash, compare_coordinates>& closed_list,
+         const Node& start, const Node& goal);
+   };
+   
+   #endif  // A_STAR_H

@@ -1,0 +1,25 @@
+.. _exhale_class_classDijkstra:
+
+Class Dijkstra
+==============
+
+- Defined in :ref:`file_include_path_planning_dijkstra.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public Planner`` (:ref:`exhale_class_classPlanner`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: Dijkstra
+   :members:
+   :protected-members:
+   :undoc-members:

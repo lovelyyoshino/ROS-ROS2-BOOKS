@@ -1,0 +1,16 @@
+.. _exhale_struct_structCompareNodeKeyPairCoordinates:
+
+Struct CompareNodeKeyPairCoordinates
+====================================
+
+- Defined in :ref:`file_lib_utils_include_utils_utils.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: CompareNodeKeyPairCoordinates
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,42 @@
+
+.. _program_listing_file_include_path_planning_jump_point_search.hpp:
+
+Program Listing for File jump_point_search.hpp
+==============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_path_planning_jump_point_search.hpp>` (``include/path_planning/jump_point_search.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   #ifndef JUMP_POINT_SEARCH_H
+   #define JUMP_POINT_SEARCH_H
+   
+   #include <queue>
+   #include <unordered_set>
+   
+   #include "path_planning/planner.hpp"
+   #include "utils/utils.hpp"
+   
+   class JumpPointSearch : public Planner {
+    public:
+     explicit JumpPointSearch(const std::vector<std::vector<int>>& grid)
+         : Planner(grid){};
+   
+     std::tuple<bool, std::vector<Node>> Plan(const Node& start,
+                                              const Node& goal) override;
+   
+     bool HasForcedNeighbours(const Node& new_point, const Node& next_point,
+                              const Node& motion) const;
+   
+     Node jump(const Node& new_point, const Node& motion, const int id);
+   
+    private:
+     std::priority_queue<Node, std::vector<Node>, compare_cost> open_list_;
+     std::vector<Node> closed_list_;
+     std::unordered_set<int> pruned;
+     Node start_, goal_;
+   };
+   #endif  // JUMP_POINT_SEARCH_H

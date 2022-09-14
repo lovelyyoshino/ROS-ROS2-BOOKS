@@ -1,0 +1,75 @@
+
+.. _program_listing_file_include_path_planning_d_star_lite.hpp:
+
+Program Listing for File d_star_lite.hpp
+========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_path_planning_d_star_lite.hpp>` (``include/path_planning/d_star_lite.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   #ifndef D_STAR_LITE_H
+   #define D_STAR_LITE_H
+   
+   #include <iostream>
+   #include <unordered_map>
+   #include <unordered_set>
+   
+   #include "path_planning/planner.hpp"
+   #include "utils/utils.hpp"
+   
+   class DStarLite : public Planner {
+    public:
+     explicit DStarLite(std::vector<std::vector<int>> grid)
+         : Planner(std::move(grid)) {}
+   
+     void SetDynamicObstacles(const bool create_random_obstacles = false,
+                              const std::unordered_map<int, std::vector<Node>>&
+                                  time_discovered_obstacles = {}) override;
+   
+     std::tuple<bool, std::vector<Node>> Plan(const Node& start,
+                                              const Node& goal) override;
+   
+    private:
+     Key CalculateKey(const Node& s) const;
+   
+     std::vector<Node> GetPred(const Node& u) const;
+   
+     std::vector<Node> GetSucc(const Node& u) const;
+   
+     std::vector<Node> GetNeighbours(const Node& u) const;
+   
+     double C(const Node& s1, const Node& s2) const;
+   
+     void Initialize();
+   
+     void UpdateVertex(const Node& u);
+   
+     bool CompareKey(const Key& p1, const Key& p2) const;
+   
+     void ComputeShortestPath();
+   
+     std::vector<Node> DetectChanges();
+   
+     bool IsObstacle(const Node& n) const;
+   
+     static double H(const Node& n1, const Node& n2);
+   
+     std::vector<std::vector<double>> CreateGrid();
+   
+     std::vector<std::vector<double>> rhs_;
+     std::vector<std::vector<double>> g_;
+     std::unordered_map<int, std::vector<Node>> time_discovered_obstacles_{};
+     std::vector<Node> motions_{};
+     LazyPQ U_;
+     Node start_, goal_, last_;
+     double k_m_ = 0;
+     Key k_old_{0, 0};
+     int time_step_ = 0;
+     bool create_random_obstacles_ = false;
+   };
+   
+   #endif  // D_STAR_LITE_H

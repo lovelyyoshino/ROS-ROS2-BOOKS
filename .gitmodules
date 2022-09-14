@@ -1,24 +1,21 @@
-[submodule "cartographer-note"]
-	path = 第三章/cartographer-note
+[submodule "chapter 7/cartographer-note"]
+	path = chapter 7/cartographer-note
 	url = https://github.com/Lcp1/cartographer-note.git
-[submodule "第三章/SC-LEGO-LOAM"]
-	path = 第三章/SC-LEGO-LOAM
+[submodule "chapter 8/SC-LEGO-LOAM"]
+	path = chapter 8/SC-LEGO-LOAM
 	url = https://github.com/lovelyyoshino/SC-LEGO-LOAM.git
-[submodule "第三章/VINS-FUSION-leanrning"]
-	path = 第三章/VINS-FUSION-leanrning
+[submodule "chapter 6/VINS-FUSION-leanrning"]
+	path = chapter 6/VINS-FUSION-leanrning
 	url = https://github.com/kuankuan-yue/VINS-FUSION-leanrning.git
-[submodule "第五章/避障/cpp_simulation"]
-	path = 第五章/避障/cpp_simulation
+[submodule "chapter 10/cpp_simulation"]
+	path = chapter 10/cpp_simulation
 	url = https://github.com/Mafumaful/cpp_simulation.git
-[submodule "第二章/ros2_ws"]
-	path = 第二章/ros2_ws
+[submodule "chapter 4/ros2_ws"]
+	path = chapter 4/ros2_ws
 	url = https://github.com/Mafumaful/ros2_ws.git
-[submodule "第五章/规划/path_planning"]
-	path = 第五章/规划/path_planning
+[submodule "chapter 11/path_planning"]
+	path = chapter 11/path_planning
 	url = https://github.com/vss2sn/path_planning.git
-[submodule "第三章/FAST_LIO2_Noted"]
-	path = 第三章/FAST_LIO2_Noted
-	url = https://github.com/lovelyyoshino/FAST_LIO2_Noted.git
-[submodule "第六章/Prometheus"]
-	path = 第六章/Prometheus
+[submodule "chapter 12/Prometheus"]
+	path = chapter 12/Prometheus
 	url = https://github.com/amov-lab/Prometheus.git

@@ -1,0 +1,64 @@
+
+.. _program_listing_file_include_path_planning_ant_colony.hpp:
+
+Program Listing for File ant_colony.hpp
+=======================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_path_planning_ant_colony.hpp>` (``include/path_planning/ant_colony.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   #ifndef ANT_COLONY_H
+   #define ANT_COLONY_H
+   
+   #include <tuple>
+   #include <unordered_map>
+   
+   #include "path_planning/planner.hpp"
+   #include "utils/utils.hpp"
+   
+   struct Ant {
+     Ant(const Node& start = Node(), const int id = 0)
+         : id_(id), current_node_(start), previous_node_(Node(-1, -1)) {}
+   
+     bool found_goal_ = false;
+     int id_;
+     int steps_ = 0;
+     Node current_node_;
+     Node previous_node_;
+     std::vector<Node> path_;
+   };
+   
+   class AntColony : public Planner {
+    public:
+     explicit AntColony(const std::vector<std::vector<int>>& grid)
+         : Planner(grid) {}
+   
+     void SetParams(const int n_ants = 10, const double alpha = 1,
+                    const double beta = 0.2, const double evap_rate = 0.5,
+                    const double Q = 10, const int iterations = 50);
+   
+     void PrintAntPath(Ant& ant) const;
+   
+     static void RemoveLoop(Ant& ant);
+   
+     std::tuple<bool, std::vector<Node>> Plan(const Node& start,
+                                              const Node& goal) override;
+   
+    private:
+     int n_ants_ = 10;
+     double alpha_ = 1;
+     double beta_ = 0.2;
+     double evap_rate_ = 0.5;
+     double Q_ = 10;
+     int iterations_ = 50;
+     Node start_, goal_;
+     std::vector<Ant> ants_;
+     std::vector<Node> motions_;
+     std::unordered_map<std::pair<int, int>, double, pair_hash> pheromone_edges_;
+   };
+   
+   #endif  // ANT_COLONY_H

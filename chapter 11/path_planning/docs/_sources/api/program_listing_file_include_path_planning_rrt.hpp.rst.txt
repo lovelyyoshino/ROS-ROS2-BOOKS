@@ -1,0 +1,57 @@
+
+.. _program_listing_file_include_path_planning_rrt.hpp:
+
+Program Listing for File rrt.hpp
+================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_path_planning_rrt.hpp>` (``include/path_planning/rrt.hpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   #ifndef RRT_H
+   #define RRT_H
+   
+   #include <limits>
+   #include <tuple>
+   #include <unordered_map>
+   #include <vector>
+   
+   #include "path_planning/planner.hpp"
+   #include "utils/utils.hpp"
+   
+   class RRT : public Planner {
+    public:
+     explicit RRT(std::vector<std::vector<int>> grid) : Planner(std::move(grid)) {}
+   
+     void SetParams(const int threshold = 2, const int max_iter_x_factor = 20);
+   
+     std::tuple<bool, std::vector<Node>> Plan(const Node& start,
+                                              const Node& goal) override;
+   
+    private:
+     std::tuple<bool, Node> FindNearestPoint(Node& new_node);
+   
+     bool IsAnyObstacleInPath(const Node& n_1, const Node& n_2) const;
+   
+     Node GenerateRandomNode() const;
+   
+     bool CheckGoalVisible(const Node& new_node);
+   
+     void CreateObstacleList();
+   
+     std::vector<Node> CreatePath();
+   
+    private:
+     Node start_, goal_;
+     std::unordered_set<Node, NodeIdAsHash, compare_coordinates>
+         point_list_;  // TODO: set up in cstor
+     std::unordered_map<Node, std::vector<Node>> near_nodes_;
+     std::vector<Node> obstacle_list_;
+     double threshold_ = 1.5;       // TODO: set up in cstor
+     int max_iter_x_factor_ = 500;  // TODO: set up in cstor
+   };
+   
+   #endif  // RRT_H

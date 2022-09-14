@@ -1,0 +1,25 @@
+.. _exhale_class_classGeneticAlgorithm:
+
+Class GeneticAlgorithm
+======================
+
+- Defined in :ref:`file_include_path_planning_genetic_algorithm.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public Planner`` (:ref:`exhale_class_classPlanner`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: GeneticAlgorithm
+   :members:
+   :protected-members:
+   :undoc-members:

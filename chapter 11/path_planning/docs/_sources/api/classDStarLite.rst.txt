@@ -1,0 +1,25 @@
+.. _exhale_class_classDStarLite:
+
+Class DStarLite
+===============
+
+- Defined in :ref:`file_include_path_planning_d_star_lite.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public Planner`` (:ref:`exhale_class_classPlanner`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: DStarLite
+   :members:
+   :protected-members:
+   :undoc-members:

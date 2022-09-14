@@ -1,0 +1,25 @@
+.. _exhale_class_classRRT:
+
+Class RRT
+=========
+
+- Defined in :ref:`file_include_path_planning_rrt.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public Planner`` (:ref:`exhale_class_classPlanner`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: RRT
+   :members:
+   :protected-members:
+   :undoc-members:

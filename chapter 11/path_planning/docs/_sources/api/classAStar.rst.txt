@@ -1,0 +1,25 @@
+.. _exhale_class_classAStar:
+
+Class AStar
+===========
+
+- Defined in :ref:`file_include_path_planning_a_star.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public Planner`` (:ref:`exhale_class_classPlanner`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: AStar
+   :members:
+   :protected-members:
+   :undoc-members:

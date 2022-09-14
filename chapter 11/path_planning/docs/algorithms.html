@@ -1,0 +1,674 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Algorithms &mdash; Path Planning  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script type="text/javascript" src="_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/collapsible-lists/css/tree_view.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Library API" href="api/library_root.html" />
+    <link rel="prev" title="Overview" href="overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: white" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Path Planning
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Algorithms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dijkstra">Dijkstra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a">A*</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lpa">LPA*:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#d-lite">D* Lite:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rrt">RRT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rrtstar">RRTStar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ant-colony-optimization">Ant Colony Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#genetic-algorithm">Genetic Algorithm</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/library_root.html">Library API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/library_root.html#class-hierarchy">Class Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/library_root.html#file-hierarchy">File Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/library_root.html#full-api">Full API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/library_root.html#namespaces">Namespaces</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/namespace_std.html">Namespace std</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/library_root.html#classes-and-structs">Classes and Structs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/structcompare__cost.html">Struct compare_cost</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/structCompareNodeKeyPairCoordinates.html">Struct CompareNodeKeyPairCoordinates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/structCompareNodeKeyPairCoordinatesAndKeys.html">Struct CompareNodeKeyPairCoordinatesAndKeys</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/structCompareNodeKeyPairKeys.html">Struct CompareNodeKeyPairKeys</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/structKey.html">Struct Key</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/structNodeKeyPair.html">Struct NodeKeyPair</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/structpair__hash.html">Struct pair_hash</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classAnt.html">Class Ant</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classAntColony.html">Class AntColony</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classAStar.html">Class AStar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classDijkstra.html">Class Dijkstra</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classDStarLite.html">Class DStarLite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classGeneticAlgorithm.html">Class GeneticAlgorithm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classJumpPointSearch.html">Class JumpPointSearch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classLazyPQ.html">Class LazyPQ</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classLPAStar.html">Class LPAStar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classNode.html">Class Node</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classRRT.html">Class RRT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classRRTStar.html">Class RRTStar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classstd_1_1greater_3_01NodeKeyPair_01_4.html">Template Class greater&lt; NodeKeyPair &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classstd_1_1hash_3_01Node_01_4.html">Template Class hash&lt; Node &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/classstd_1_1hash_3_01NodeKeyPair_01_4.html">Template Class hash&lt; NodeKeyPair &gt;</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/library_root.html#functions">Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/function_utils_8cpp_1a11e065987c86e2f9329fdc29629e5265.html">Function checkOutsideBoundary(const Node&amp;, const int)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_utils_8hpp_1a11e065987c86e2f9329fdc29629e5265.html">Function checkOutsideBoundary(const Node&amp;, const int)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_utils_8cpp_1a48dbe0e3b6273a8ffb14d1adc77411db.html">Function CompareCoordinates(const Node&amp;, const Node&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_utils_8hpp_1a48dbe0e3b6273a8ffb14d1adc77411db.html">Function CompareCoordinates(const Node&amp;, const Node&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_utils_8cpp_1a3314a5898aaa777e954abfa9f3996d41.html">Function GetMotion()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_utils_8hpp_1a3314a5898aaa777e954abfa9f3996d41.html">Function GetMotion()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_main_8cpp_1ae66f6b31b5ad750f1fe042a706a4e3d4.html">Function main()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_main_8hpp_1ae66f6b31b5ad750f1fe042a706a4e3d4.html">Function main()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_utils_8cpp_1ad8afc8a6d98fae87fffe3ad0621eaf4b.html">Function MakeGrid(std::vector&lt;std::vector&lt;int&gt;&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_utils_8hpp_1ad8afc8a6d98fae87fffe3ad0621eaf4b.html">Function MakeGrid(std::vector&lt;std::vector&lt;int&gt;&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_utils_8cpp_1a667f2f0837580a493eedc1e53baa45e0.html">Function PrintCost(const std::vector&lt;std::vector&lt;int&gt;&gt;&amp;, const std::vector&lt;Node&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_utils_8hpp_1a667f2f0837580a493eedc1e53baa45e0.html">Function PrintCost(const std::vector&lt;std::vector&lt;int&gt;&gt;&amp;, const std::vector&lt;Node&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_utils_8hpp_1a2aa1050b67b2ce09706bd0a96ce941d5.html">Template Function PrintGrid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_utils_8cpp_1a9ecfa4541dd95cf3ae2e5300446abfec.html">Function PrintPath(const std::vector&lt;Node&gt;&amp;, const Node&amp;, const Node&amp;, std::vector&lt;std::vector&lt;int&gt;&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_utils_8hpp_1aec7b281b1b2b9561e207883aa2512a6d.html">Function PrintPath(const std::vector&lt;Node&gt;&amp;, const Node&amp;, const Node&amp;, std::vector&lt;std::vector&lt;int&gt;&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_utils_8cpp_1ad9c6ace1d22b2bc5ab9b803876478c3d.html">Function PrintPathInOrder(const std::vector&lt;Node&gt;&amp;, const Node&amp;, const Node&amp;, std::vector&lt;std::vector&lt;int&gt;&gt;&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/function_utils_8hpp_1a2fe92d436aed1da68157913148e98e51.html">Function PrintPathInOrder(const std::vector&lt;Node&gt;&amp;, const Node&amp;, const Node&amp;, std::vector&lt;std::vector&lt;int&gt;&gt;&amp;)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/library_root.html#variables">Variables</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/variable_rrt_8cpp_1adf2d22e6604f79d3fb5290aa8e5d7ae1.html">Variable half_grid_unit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/variable_rrt__star_8cpp_1adf2d22e6604f79d3fb5290aa8e5d7ae1.html">Variable half_grid_unit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/variable_genetic__algorithm_8cpp_1a5a32ba657f745e5bbdbcf277a3ea364e.html">Variable inverted_probabilty_mutate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/variable_lpa__star_8cpp_1ac5de1508be41d2871871f512d90d2ec3.html">Variable obs_found_pause_time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/variable_d__star__lite_8cpp_1a07126d3308228406671bd7e8d57f1d5a.html">Variable pause_time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/variable_genetic__algorithm_8cpp_1a1a90247d803bd7e8f511935381a4d74e.html">Variable random_range_max</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/variable_utils_8cpp_1a88ee0fdd1247f7aa11f62295483547a5.html">Variable spacing_for_grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/variable_rrt_8cpp_1aad6745e2cd8d6ee98bce35020d09cf49.html">Variable tol_l_limit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/variable_rrt__star_8cpp_1aad6745e2cd8d6ee98bce35020d09cf49.html">Variable tol_l_limit</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/library_root.html#defines">Defines</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/define_utils_8hpp_1a7b3b25cba33b07c303f3060fe41887f6.html">Define BLACK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/define_utils_8hpp_1a79d10e672abb49ad63eeaa8aaef57c38.html">Define BLUE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/define_utils_8hpp_1ad243f93c16bc4c1d3e0a13b84421d760.html">Define CYAN</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/define_utils_8hpp_1acfbc006ea433ad708fdee3e82996e721.html">Define GREEN</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/define_utils_8hpp_1a6f699060902f800f12aaae150f3a708e.html">Define MAGENTA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/define_utils_8hpp_1a8d23feea868a983c8c2b661e1e16972f.html">Define RED</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/define_utils_8hpp_1ab702106cf3b3e96750b6845ded4e0299.html">Define RESET</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/define_utils_8hpp_1a87b537f5fa5c109d3c05c13d6b18f382.html">Define WHITE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/define_utils_8hpp_1abf681265909adf3d3e8116c93c0ba179.html">Define YELLOW</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/library_root.html#directories">Directories</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/dir_include.html">Directory include</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/dir_include.html">Directory include</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/dir_lib.html">Directory lib</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/dir_main.html">Directory main</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/dir_path_planning.html">Directory planning</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/dir_src.html">Directory src</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/dir_src.html">Directory src</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/dir_utils.html">Directory utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/dir_utils.html">Directory utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/library_root.html#files">Files</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/file_src_a_star.cpp.html">File a_star.cpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_include_path_planning_a_star.hpp.html">File a_star.hpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_src_ant_colony.cpp.html">File ant_colony.cpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_include_path_planning_ant_colony.hpp.html">File ant_colony.hpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_src_d_star_lite.cpp.html">File d_star_lite.cpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_include_path_planning_d_star_lite.hpp.html">File d_star_lite.hpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_src_dijkstra.cpp.html">File dijkstra.cpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_include_path_planning_dijkstra.hpp.html">File dijkstra.hpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_src_genetic_algorithm.cpp.html">File genetic_algorithm.cpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_include_path_planning_genetic_algorithm.hpp.html">File genetic_algorithm.hpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_src_jump_point_search.cpp.html">File jump_point_search.cpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_include_path_planning_jump_point_search.hpp.html">File jump_point_search.hpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_src_lpa_star.cpp.html">File lpa_star.cpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_include_path_planning_lpa_star.hpp.html">File lpa_star.hpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_main_main.cpp.html">File main.cpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_include_path_planning_main.hpp.html">File main.hpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_README.md.html">File README.md</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_src_rrt.cpp.html">File rrt.cpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_include_path_planning_rrt.hpp.html">File rrt.hpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_src_rrt_star.cpp.html">File rrt_star.cpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_include_path_planning_rrt_star.hpp.html">File rrt_star.hpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_lib_utils_src_utils.cpp.html">File utils.cpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/file_lib_utils_include_utils_utils.hpp.html">File utils.hpp</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Path Planning</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Algorithms</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/algorithms.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="algorithms">
+<span id="id1"></span><h1>Algorithms<a class="headerlink" href="#algorithms" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>This page contains the pseudo code outlining the algorithms implemented.</li>
+<li>An effort has been made to implement the algorithm in a way that allows easy correspondence with the pseudo code, facilitating learning.</li>
+</ul>
+</div>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<ul class="last simple">
+<li>The pseudo code is written based on the original papers from which the algorithms are derived; slight modifications might be made, while retaining the essence of the algorithm.</li>
+<li>Minor modifications have been made to the implementation of Dijkstra to highlight it’s similarity of A*.</li>
+<li>Using the grid on which the algorithm runs to maintain cost would make the speed up the  algorithms significantly for both A* and Dijkstra, and remove the necessity for using the closed list, maintaining cost in the open list.</li>
+</ul>
+</div>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<ul class="last simple">
+<li>Highlight changes between pseudocode and implementation</li>
+</ul>
+</div>
+<div class="contents topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#algorithms" id="id2">Algorithms</a><ul>
+<li><a class="reference internal" href="#dijkstra" id="id3">Dijkstra</a></li>
+<li><a class="reference internal" href="#a" id="id4">A*</a></li>
+<li><a class="reference internal" href="#lpa" id="id5">LPA*:</a></li>
+<li><a class="reference internal" href="#d-lite" id="id6">D* Lite:</a></li>
+<li><a class="reference internal" href="#rrt" id="id7">RRT</a></li>
+<li><a class="reference internal" href="#rrtstar" id="id8">RRTStar</a></li>
+<li><a class="reference internal" href="#ant-colony-optimization" id="id9">Ant Colony Optimization</a></li>
+<li><a class="reference internal" href="#genetic-algorithm" id="id10">Genetic Algorithm</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="dijkstra">
+<h2>Dijkstra<a class="headerlink" href="#dijkstra" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>procedure main()</strong></div>
+<div class="line-block">
+<div class="line">OL = 0 //Initialize the open list. Priority queue sorted by cost</div>
+<div class="line">CL = 0 //Initialize the closed list</div>
+<div class="line">OL &lt;— s<sub>start</sub></div>
+<div class="line">while(!OL.empty())</div>
+<div class="line-block">
+<div class="line">q &lt;— OL.pop()</div>
+<div class="line">for all s in Succ(q)</div>
+<div class="line-block">
+<div class="line">if(s=s<sub>goal</sub>) return path found</div>
+<div class="line">if(s is obstacle) continue</div>
+<div class="line">s.parent &lt;— q</div>
+<div class="line">s.cost = q.cost + distance between successor and q</div>
+<div class="line">if(s` = s in OL &amp;&amp; s`.cost &lt; s.cost)</div>
+<div class="line-block">
+<div class="line">continue</div>
+</div>
+<div class="line">if(s` = s in OL &amp;&amp; s`.cost &lt; s.cost)</div>
+<div class="line-block">
+<div class="line">continue</div>
+</div>
+<div class="line">OL &lt;— s</div>
+</div>
+<div class="line">CL &lt;— q</div>
+</div>
+<div class="line">return no path</div>
+</div>
+</div>
+</div>
+<div class="section" id="a">
+<h2>A*<a class="headerlink" href="#a" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>procedure main()</strong></div>
+<div class="line-block">
+<div class="line">OL = 0 //Initialize the open list. Priority queue sorted by cost + heuristic cost value</div>
+<div class="line">CL = 0 //Initialize the closed list</div>
+<div class="line">OL &lt;— s<sub>start</sub></div>
+<div class="line">while(!OL.empty())</div>
+<div class="line-block">
+<div class="line">q &lt;— OL.pop()</div>
+<div class="line">for all s in Succ(q)</div>
+<div class="line-block">
+<div class="line">if(s=s<sub>goal</sub>) return path found</div>
+<div class="line">if(s is obstacle) continue</div>
+<div class="line">s.parent &lt;— q</div>
+<div class="line">s.cost = q.cost + distance between successor and q</div>
+<div class="line">s.h_cost = heuristic(s, s<sub>goal</sub>)</div>
+<div class="line">if(s` = s in OL &amp;&amp; s`.cost + s`.h_cost &lt; s.cost + s.h_cost)</div>
+<div class="line-block">
+<div class="line">continue</div>
+</div>
+<div class="line">if(s` = s in CL &amp;&amp; s`.cost + s`.h_cost &lt; s.cost + s.h_cost)</div>
+<div class="line-block">
+<div class="line">continue</div>
+</div>
+<div class="line">OL &lt;— s</div>
+</div>
+<div class="line">CL &lt;— q</div>
+</div>
+<div class="line">return no path</div>
+</div>
+</div>
+</div>
+<div class="section" id="lpa">
+<h2>LPA*:<a class="headerlink" href="#lpa" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>procedure CalculateKey(s)</strong></div>
+<div class="line-block">
+<div class="line">return [min(g(s), rhs(s)) + h(s<sub>start</sub>, s); min(g(s),rhs(s))];</div>
+</div>
+<div class="line"><strong>procedure Initialize()</strong></div>
+<div class="line-block">
+<div class="line">U = 0;</div>
+<div class="line">for all s in S rhs(s) = g(s) = inf</div>
+<div class="line">rhs(s<sub>start</sub>) = 0;</div>
+<div class="line">U.insert(s<sub>start</sub>, CalculateKey(s<sub>start</sub>));</div>
+</div>
+<div class="line"><strong>procedure UpdateVertex()</strong></div>
+<div class="line-block">
+<div class="line">if(u!=s<sub>start</sub>) rhs(s) = minfor all <sub>s’ in Succ(u)</sub>c(u, s’) + g(s’)</div>
+<div class="line">if(u in U) U.remove(u)</div>
+<div class="line">if(g(u)!=rhs(u)) U.insert(u, CalculateKey(u));</div>
+</div>
+<div class="line"><strong>procedure ComputeShortestPath()</strong></div>
+<div class="line-block">
+<div class="line">while(U.TopKey() &lt; CalculateKey(s<sub>goal</sub>) OR rhs(s<sub>goal</sub>) != g(s<sub>goal</sub>))</div>
+<div class="line-block">
+<div class="line">u = U.Pop();</div>
+<div class="line">if(g(u) &gt; rhs(u))</div>
+<div class="line-block">
+<div class="line">g(u) = rhs(u);</div>
+<div class="line">for all s in Succ(u) UpdateVertex(s);</div>
+</div>
+<div class="line">else</div>
+<div class="line-block">
+<div class="line">g(u) = inf;</div>
+<div class="line">for all s in Succ(u) (union) {u} UpdateVertex(s)</div>
+</div>
+</div>
+</div>
+<div class="line"><strong>procedure Main()</strong></div>
+<div class="line-block">
+<div class="line">Initialize();</div>
+<div class="line">forever: // This runs for n times by default in current implementation</div>
+<div class="line-block">
+<div class="line">ComputeShortestPath();</div>
+<div class="line">Scan graph for changed edge costs;</div>
+<div class="line">if any edge cost changed // this occurs with probability 1/n for every iteration</div>
+<div class="line">for all directed edges (u,v) with changed edge costs</div>
+<div class="line-block">
+<div class="line">Update the edge cost c(u,v);</div>
+<div class="line">UpdateVertex(u)</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="d-lite">
+<h2>D* Lite:<a class="headerlink" href="#d-lite" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>procedure CalculateKey(s)</strong></div>
+<div class="line-block">
+<div class="line">return [min(g(s), rhs(s)) + h(s<sub>start</sub>, s) + k<sub>m</sub>; min(g(s),rhs(s))];</div>
+</div>
+<div class="line"><strong>procedure Initialize()</strong></div>
+<div class="line-block">
+<div class="line">U = 0;</div>
+<div class="line">k<sub>m</sub>= 0;</div>
+<div class="line">for all s in S rhs(s) = g(s) = inf</div>
+<div class="line">rhs(s<sub>goal</sub>) = 0;</div>
+<div class="line">U.insert(s<sub>goal</sub>, CalculateKey(s<sub>goal</sub>));</div>
+</div>
+<div class="line"><strong>procedure UpdateVertex()</strong></div>
+<div class="line-block">
+<div class="line">if(u!=s<sub>goal</sub>) rhs(s) = minfor all <sub>s’ in Succ(u)</sub>c(u, s’) + g(s’)</div>
+<div class="line">if(u in U) U.remove(u)</div>
+<div class="line">if(g(u)!=rhs(u)) U.insert(u, CalculateKey(u));</div>
+</div>
+<div class="line"><strong>procedure ComputeShortestPath()</strong></div>
+<div class="line-block">
+<div class="line">while(U.TopKey() &lt; CalculateKey(s<sub>start</sub>) OR rhs(s<sub>start</sub>) != g(s<sub>start</sub>))</div>
+<div class="line-block">
+<div class="line">k<sub>old</sub>= U.TopKey();</div>
+<div class="line">u = U.Pop();</div>
+<div class="line">if(k<sub>old</sub>&lt; CalculateKey(u))</div>
+<div class="line-block">
+<div class="line">U.insert(u, CalculateKey(u))</div>
+</div>
+<div class="line">else if(g(u) &gt; rhs(u))</div>
+<div class="line-block">
+<div class="line">g(u) = rhs(u);</div>
+<div class="line">for all s in Pred(u) UpdateVertex(s);</div>
+</div>
+<div class="line">else</div>
+<div class="line-block">
+<div class="line">g(u) = inf;</div>
+<div class="line">for all s in Pred(u) (union) {u} UpdateVertex(s)</div>
+</div>
+</div>
+</div>
+<div class="line"><strong>procedure Main()</strong></div>
+<div class="line-block">
+<div class="line">s<sub>last</sub>= s<sub>start</sub></div>
+<div class="line">Initialize();</div>
+<div class="line">ComputeShortestPath();</div>
+<div class="line">while(s<sub>start</sub>!=s<sub>goal</sub>)</div>
+<div class="line-block">
+<div class="line">/ if(g(s<sub>start</sub>)=inf) there is no known path /</div>
+<div class="line">s<sub>start</sub>= arg min<sub>for all s’ in Succ(s:sub:`start</sub>)`(c(s<sub>start</sub>,s’)+g(s’)</div>
+<div class="line">Move to start</div>
+<div class="line">Scan graph for changed edge costs;</div>
+<div class="line">if any edge cost changed</div>
+<div class="line">k<sub>m</sub>= k<sub>m</sub>+ h(s<sub>last</sub>,s<sub>start</sub>);</div>
+<div class="line">s<sub>last</sub>= s<sub>start</sub></div>
+<div class="line">for all directed edges (u,v) with changed edge costs</div>
+<div class="line-block">
+<div class="line">Update the edge cost c(u,v);</div>
+<div class="line">UpdateVertex(u)</div>
+</div>
+</div>
+<div class="line">ComputeShortestPath()</div>
+</div>
+</div>
+</div>
+<div class="section" id="rrt">
+<h2>RRT<a class="headerlink" href="#rrt" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>procedure main()</strong></div>
+<div class="line-block">
+<div class="line">T = 0; // Initialize list/tree</div>
+<div class="line">for k = 1 to K</div>
+<div class="line-block">
+<div class="line">q<sub>rand</sub>← GenerateRandomNode()</div>
+<div class="line">q<sub>parent</sub>← FindNearestPoint(q<sub>rand</sub>, T, threshold) // Returns closest node based on distance</div>
+<div class="line">if(q<sub>parent</sub>exists)</div>
+<div class="line-block">
+<div class="line">q<sub>parent</sub>&lt;— q<sub>parent</sub></div>
+<div class="line">if(q<sub>rand</sub>= goal) return path found</div>
+</div>
+</div>
+<div class="line">return no path</div>
+</div>
+</div>
+</div>
+<div class="section" id="rrtstar">
+<h2>RRTStar<a class="headerlink" href="#rrtstar" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>procedure rewire()</strong></div>
+<div class="line-block">
+<div class="line">for all node in close_node_list != q<sub>parent</sub></div>
+<div class="line-block">
+<div class="line">if(q<sub>rand</sub>.cost + dist(node ,q<sub>rand</sub>) &lt; node.cost)</div>
+<div class="line-block">
+<div class="line">node.parent &lt;— q<sub>rand</sub></div>
+<div class="line">node.cost &lt;— q<sub>rand</sub>.cost + distance(node, q<sub>rand</sub>)</div>
+</div>
+</div>
+</div>
+<div class="line"><strong>procedure main()</strong></div>
+<div class="line-block">
+<div class="line">T = 0; // Initialize list/tree</div>
+<div class="line">for k = 1 to K</div>
+<div class="line-block">
+<div class="line">q<sub>rand</sub>← GenerateRandomNode()</div>
+<div class="line">q<sub>parent</sub>, close_node_list ← FindNearestPoint(q<sub>rand</sub>, T, threshold) // Returns node that results in lowest total cost and list of all close nodes                                                  // Updates q<sub>rand</sub>.cost to q<sub>parent</sub>.cost + distance(q<sub>rand</sub>, q<sub>parent</sub>)</div>
+<div class="line">if(q<sub>parent</sub>exists)</div>
+<div class="line-block">
+<div class="line">q<sub>parent</sub>&lt;— q<sub>parent</sub></div>
+<div class="line">if(q<sub>rand</sub>= goal) return path found</div>
+<div class="line">rewire()</div>
+</div>
+</div>
+<div class="line">return no path</div>
+</div>
+</div>
+</div>
+<div class="section" id="ant-colony-optimization">
+<h2>Ant Colony Optimization<a class="headerlink" href="#ant-colony-optimization" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>procedure main()</strong></div>
+<div class="line-block">
+<div class="line">Initialize ant colony</div>
+<div class="line">for each iterations</div>
+<div class="line-block">
+<div class="line">initialize ants</div>
+<div class="line">for each ant</div>
+<div class="line-block">
+<div class="line">while ant position != goal and number of steps &lt; max steps</div>
+<div class="line-block">
+<div class="line">calculate probabilities of possible next edges to traverse</div>
+<div class="line">choose next position based on probability</div>
+<div class="line">if not next positions possible, break</div>
+<div class="line">if reached revisited points, remove loop and reduce number of steps taken</div>
+<div class="line">update pheromone trail</div>
+</div>
+<div class="line">update ant in ant colony</div>
+</div>
+<div class="line">update pheromone trail by evaporation equation</div>
+<div class="line">update pheromone trails based on ants that reached the goal</div>
+</div>
+<div class="line">if path found return last best path</div>
+<div class="line">else return no path</div>
+</div>
+</div>
+</div>
+<div class="section" id="genetic-algorithm">
+<h2>Genetic Algorithm<a class="headerlink" href="#genetic-algorithm" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line"><strong>procedure main()</strong></div>
+<div class="line-block">
+<div class="line">Initialize paths</div>
+<div class="line">for each generation</div>
+<div class="line-block">
+<div class="line">choose paths based on criteria</div>
+<div class="line">mutate paths (using CrossoverMutation()) to find new paths if number of paths less than set number</div>
+<div class="line">for each path</div>
+<div class="line-block">
+<div class="line">calculate cost and validity of path</div>
+<div class="line">if path valid add to paths list</div>
+</div>
+</div>
+<div class="line">if path found return last best path</div>
+<div class="line">else return no path</div>
+</div>
+<div class="line"><strong>procedure CrossoverMutation()</strong></div>
+<div class="line-block">
+<div class="line">randomly choose 2 chromosomes (paths) in path list</div>
+<div class="line">initialize new chromosome</div>
+<div class="line">for each gene in chromosome</div>
+<div class="line-block">
+<div class="line">choose either the gene from the first chromosome, form the second chromosome or a random gene based on probabilities set</div>
+<div class="line">add this gene to new chromosome</div>
+</div>
+<div class="line">return new chromosome</div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api/library_root.html" class="btn btn-neutral float-right" title="Library API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="overview.html" class="btn btn-neutral float-left" title="Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, vss2sn
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

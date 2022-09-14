@@ -1,0 +1,69 @@
+
+.. _file_include_path_planning_d_star_lite.hpp:
+
+File d_star_lite.hpp
+====================
+
+
+Contains the :ref:`exhale_class_classDStarLite` class. 
+
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/path_planning/d_star_lite.hpp``)
+------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_path_planning_d_star_lite.hpp.rst
+
+
+
+Detailed Description
+--------------------
+
+vss2sn 
+
+
+
+
+
+
+Includes
+--------
+
+
+- ``iostream``
+
+- ``path_planning/planner.hpp`` (:ref:`file_include_path_planning_planner.hpp`)
+
+- ``unordered_map``
+
+- ``unordered_set``
+
+- ``utils/utils.hpp`` (:ref:`file_lib_utils_include_utils_utils.hpp`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_main_main.cpp`
+
+- :ref:`file_src_d_star_lite.cpp`
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classDStarLite`
+
