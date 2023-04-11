@@ -11,3 +11,5 @@ $ git clone --recursive https://github.com/lovelyyoshino/ROS-ROS2-BOOKS.git
 ```
 
 书籍购买链接：
+
+![](https://github.com/lovelyyoshino/ROS-ROS2-BOOKS/blob/main/pic/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230411215859.jpg)
