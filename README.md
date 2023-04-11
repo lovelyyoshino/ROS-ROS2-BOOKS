@@ -9,3 +9,5 @@ $ mkdir -p workspace/src && cd workspace/src
 ## 将文件和submodule一起拉出
 $ git clone --recursive https://github.com/lovelyyoshino/ROS-ROS2-BOOKS.git
 ```
+
+书籍购买链接：
