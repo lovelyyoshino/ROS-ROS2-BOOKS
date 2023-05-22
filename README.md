@@ -10,6 +10,6 @@ $ mkdir -p workspace/src && cd workspace/src
 $ git clone --recursive https://github.com/lovelyyoshino/ROS-ROS2-BOOKS.git
 ```
 
-书籍购买请前往京东商城，书籍所有代码图片也可以在化学工业出版社渠道进行下载：[https://item.jd.com/10072509427811.html](https://item.jd.com/10072509427811.html)
+书籍购买请前往京东商城，书籍所有代码图片也可以在化学工业出版社渠道进行下载：[https://m.tb.cn/h.UDRXaDF?tk=k8AndonOXXb](https://m.tb.cn/h.UDRXaDF?tk=k8AndonOXXb)
 
 ![](https://github.com/lovelyyoshino/ROS-ROS2-BOOKS/blob/main/pic/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230411215859.jpg)
